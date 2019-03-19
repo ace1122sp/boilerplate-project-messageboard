@@ -1,13 +1,13 @@
 # **MessageBoard - A freeCodeCamp project**
 ---
 ## Getting Started
----
+
 ### Server / API
---- 
+
 ### Front-end
----
+
 ## Tech Stack
----
+
 ### Front-end: 
 
 - React
