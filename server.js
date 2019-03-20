@@ -43,7 +43,7 @@ app.use(function(req, res, next) {
 //Start our server and tests!
 app.listen(PORT, () => {
   console.log("Listening on port " + PORT);
-  if(config.app.env === 'test') {
+  if(process.env.NODE_ENV === 'test') {
     console.log('Running Tests...');
     setTimeout(function () {
       try {
