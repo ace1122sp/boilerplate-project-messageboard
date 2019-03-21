@@ -12,11 +12,14 @@ const { suite, test, setup, teardown } = require('mocha');
 const uuid = require('uuid/v4');
 
 const server = require('../server');
-const { createThread, deleteThread } = require('../libs/db-test-arrangers');
+const { createThread, deleteThread, createReply, deleteReply } = require('../libs/db-test-arrangers');
 
 const assert = chai.assert;
 
 chai.use(chaiHttp);
+
+// by default all statuses are 200 or 400
+// after you have written tests change response statuses according to specific case
 
 suite('Functional Tests', () => {
   // arrange
@@ -46,10 +49,7 @@ suite('Functional Tests', () => {
         chai.request(server)
           .post('/api/threads/general')
           .send(requestBody)
-          .end((err, res) => {
-            // assign id so you can clean up after test has been executed
-            threadToDeleteId = res.body._id;
-
+          .end((err, res) => {            
             const actualStatus = res.status;
             const actualBody = res.body;
 
@@ -108,7 +108,7 @@ suite('Functional Tests', () => {
       });
 
       teardown(done => {
-        deleteThread(done, threadToDeleteId);
+        deleteThread(done);
       });
     });
     
@@ -196,23 +196,167 @@ suite('Functional Tests', () => {
   });
   
   suite('API ROUTING FOR /api/replies/:board', () => {
+    // arrange 
+    const threadId = uuid();
     
+    suiteSetup(done => {
+      const thread = {
+        _id: threadId,
+        text: 'Replies Test Suite',
+        delete_password: '12345'
+      };
+      createThread(done, thread);
+    });
+
     suite('POST', () => {
-      
+      test('new reply to thread Replies Test Suite', done => {
+        // arrange
+        const requestBody = {
+          text: 'reply text',
+          thread_id: threadId,
+          delete_password: 'reply_password'
+        };
+        const expectedStatus = 200;
+        const expectedBody = {
+          _id: null,
+          text: 'reply text',
+          created_on: Date.now(),
+          delete_password: 'reply_password',
+          reported: false
+        };
+
+        // act 
+        chai.request(server) 
+          .post('/api/threads/general')
+          .send(requestBody)
+          .end((err, res) => {
+            const actualStatus = res.status;
+            const actualBody = res.body;            
+
+            // assert
+            assert.equal(actualStatus, expectedStatus);
+            assert.hasAllKeys(actualBody, Object.keys(expectedBody));
+            assert.propertyVal(actualBody, 'text', expectedBody.text);
+            assert.closeTo(Date.parse(actualBody.created_on), expectedBody.created_on, ONE_DAY_LENGTH);          
+            assert.isFalse(actualBody.reported);
+
+            done();
+          });
+      });
+
+      teardown(done => {
+        // should delete created reply
+        deleteReply(done, thread_id);
+      });
     });
     
-    suite('GET', () => {
-      
+    suite('GET', () => {      
+      test('get thread with all replies', done => {
+        // arrange
+        const expectedStatus = 200;
+        const expectedBody = {
+          _id: threadId,
+          text: 'Replies Test Suite',
+          create_on: null,
+          bumped_on: null,
+          reported: false,
+          replies: []
+        };
+
+        // act
+        chai.request(server)
+          .get(`/api/replies/general?thread_id=${threadId}`)
+          .end((err, res) => {
+            const actualStatus = res.status;
+            const actualBody = res.body;
+            
+            // assert
+            assert.equal(actualStatus, expectedStatus);
+            assert.hasAllKeys(actualBody, Object.keys(expectedBody));
+            assert.propertyVal(actualBody, 'text', expectedBody.text);            
+
+            done();
+          });
+      });
     });
     
     suite('PUT', () => {
-      
+      // arrange
+      const reply_id = uuid();
+
+      setup(done => {
+        createReply(done, threadId, reply_id);
+      });
+
+      test('report a reply', done => {
+        // arrange
+        const requestBody = {
+          thread_id: threadId,
+          reply_id
+        };
+        const expectedStatus = 200;
+        const expectedResponse = 'success';
+
+        // act
+        chai.request(server)
+          .put('/api/replies/general')
+          .send(requestBody)
+          .end((err, res) => {
+            const actualStatus = res.status;
+            const actualResponse = res.body;
+            
+            // assert
+            assert.equal(actualStatus, expectedStatus);
+            assert.equal(actualResponse, expectedResponse);
+
+            done();
+          });
+      });
+
+      teardown(done => {
+        deleteReply(done, threadId, reply_id);
+      });
     });
     
     suite('DELETE', () => {
-      
+      // arrange 
+      const reply_id = uuid();
+      const delete_password = 'reply_delete';
+
+      setup(done => {
+        createReply(done, threadId, reply_id);
+      });
+
+      test('delete a reply', done => {
+        // arrange
+        const requestBody = {
+          thread_id: threaId,
+          reply_id,
+          delete_password
+        };
+        const expectedStatus = 200;
+        const expectedResponse = 'success';
+        
+        // act
+        chai.request(server)
+          .delete('/api/replies/general')
+          .send(requestBody)
+          .end((err, res) => {
+            const actualStatus = res.status;
+            const actualResponse = res.body;
+
+            // assert
+            assert.equal(actualStatus, expectedStatus);
+            assert.equeal(actualResponse, expectedResponse);
+
+            done();
+          });
+      });
     });
     
+    suiteTeardown(done => {
+      deleteThread(done, threaId);
+    });
   });
 
 });
