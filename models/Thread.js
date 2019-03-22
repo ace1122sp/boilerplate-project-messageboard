@@ -35,7 +35,7 @@ const ThreadSchema = new mongoose.Schema({
   },
   replies: {
     type: [{
-      type: [mongoose.Schema.Types.ObjectId],
+      type: [String],
       ref: 'Reply'
     }]
   }

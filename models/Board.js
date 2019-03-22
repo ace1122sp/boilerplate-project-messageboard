@@ -18,7 +18,7 @@ const BoardSchema = new mongoose.Schema({
   },
   threads: {
     type: [{
-      type: [mongoose.Schema.Types.ObjectId],
+      type: [String],
       ref: 'Thread'
     }]
   }
@@ -35,6 +35,10 @@ BoardSchema.static('initDefault', function(name) {
       return Promise.resolve();
     }
   });
+});
+
+BoardSchema.static('add', function(boardName, threadId) {
+  return this.findOneAndUpdate({ name: boardName }, { $push: { threads: threadId } });
 });
 
 const Board = mongoose.model('Board', BoardSchema);
