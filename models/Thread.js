@@ -41,6 +41,21 @@ const ThreadSchema = new mongoose.Schema({
   }
 });
 
+ThreadSchema.static('report', function(_id) {
+  return this.findByIdAndUpdate(_id, { reported: true });
+});
+
+ThreadSchema.static('deleteWithPassword', function(_id, delete_password) {
+  return Thread.findOneAndDelete({ _id, delete_password })
+    .then(rec => {
+      if (rec) return true;
+      return false;
+    })
+    .catch(err => {
+      console.error(err); // temp solution for development
+    });
+})
+
 const Thread = mongoose.model('Thread', ThreadSchema);
 
 module.exports = Thread;
