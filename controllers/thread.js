@@ -43,6 +43,7 @@ const reportThread = (req, res) => {
 };
 
 const deleteThread = (req, res) => {
+  // need to validate
   const thread_id = req.body.thread_id;
   const delete_password = req.body.delete_password;
 
@@ -54,7 +55,9 @@ const deleteThread = (req, res) => {
         res.send('incorrect password');
       }
     })
-    .catch(err => {});
+    .catch(err => {
+      console.error(err); // temp solution for development
+    });
 };
 
 module.exports = {
