@@ -17,7 +17,7 @@ const BoardSchema = new mongoose.Schema({
   },
   threads: {
     type: [{
-      type: [mongoose.Schema.Type.ObjectId],
+      type: [mongoose.Schema.Types.ObjectId],
       ref: 'Thread'
     }]
   }
