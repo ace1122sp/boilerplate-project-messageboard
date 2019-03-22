@@ -54,7 +54,11 @@ ThreadSchema.static('deleteWithPassword', function(_id, delete_password) {
     .catch(err => {
       console.error(err); // temp solution for development
     });
-})
+});
+
+// returns 10 last bumped threads on the board
+// every thread is returned with only the most recent 3 replies
+ThreadSchema.static('getLastTen', function(board) {});
 
 const Thread = mongoose.model('Thread', ThreadSchema);
 

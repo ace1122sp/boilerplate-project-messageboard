@@ -2,8 +2,6 @@ const Board = require('../models/Board');
 const Thread = require('../models/Thread');
 const uuid = require('uuid/v4');
 
-// returns 10 last bumped threads on the board
-// every thread is returned with only the most recent 3 replies
 const getThreads = (req, res) => {
   // to validate
   const board = req.params.board;
