@@ -7,7 +7,7 @@ const getThread = (req, res) => {
   const thread_id = req.queries.thread_id;
 
   Thread.get(thread_id)
-    .then((rec) => {
+    .then(rec => {
       res.json(rec);
     })
     .catch(err => {

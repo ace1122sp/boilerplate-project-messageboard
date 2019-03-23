@@ -25,11 +25,11 @@ const BoardSchema = new mongoose.Schema({
 });
 
 BoardSchema.static('initDefault', function(name) {
-  this.findOne({}, (err, res) => {
+  this.findOne({}, (err, rec) => {
     if (err) {
       console.error(err); // temp for development
       return Promise.reject(err);
-    } else if (res === null) {
+    } else if (rec === null) {
       return this.create({ _id: uuid(), name });
     } else {
       return Promise.resolve();
@@ -43,10 +43,10 @@ BoardSchema.static('add', function(boardName, threadId) {
 
 BoardSchema.static('remove', function(boardName, threadId) {
   return this.findOne({ name: boardName })
-    .then(res => {
-      const updatedThreads = res.threads.filter(thread => thread !== threadId);
-      res.threads = [...updatedThreads];
-      return res.save()
+    .then(rec => {
+      const updatedThreads = rec.threads.filter(thread => thread !== threadId);
+      rec.threads = [...updatedThreads];
+      return rec.save()
     })
     .catch(err => err);
 });
