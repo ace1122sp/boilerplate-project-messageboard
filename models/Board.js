@@ -37,7 +37,7 @@ BoardSchema.static('initDefault', function(name) {
   });
 });
 
-BoardSchema.static('add', function(boardName, threadId) {
+BoardSchema.static('addThread', function(boardName, threadId) {
   return this.findOneAndUpdate({ name: boardName }, { $push: { threads: threadId } });
 });
 

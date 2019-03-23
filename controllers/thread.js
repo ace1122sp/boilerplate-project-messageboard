@@ -28,7 +28,7 @@ const addThread = (req, res) => {
 
   thread.save()
     .then(rec => {
-      return Board.add(board, rec._id)
+      return Board.addThread(board, rec._id)
         .then(() => rec)
         .catch(err => err);
     })
