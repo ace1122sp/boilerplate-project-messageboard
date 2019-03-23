@@ -77,6 +77,15 @@ ThreadSchema.static('removeReply', function(threadId, replyId) {
     .catch(err => err); // temp solution 
 });
 
+ThreadSchema.static('clear', function(_id) {
+  return this.findById(_id)
+    .then(rec => {
+      rec.replies = [];
+      return rec.save();
+    })
+    .catch(err => err); // temp solution for development
+});
+
 const Thread = mongoose.model('Thread', ThreadSchema);
 
 module.exports = Thread;
