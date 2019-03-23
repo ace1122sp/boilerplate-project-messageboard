@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { REPLY_MIN_LENGTH, REPLY_MAX_LENGTH } = require('../config/constants');
+const { REPLY_MIN_LENGTH, REPLY_MAX_LENGTH, PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } = require('../config/constants');
 
 mongoose.Promise = global.Promise;
 
@@ -31,6 +31,21 @@ const ReplySchema = new mongoose.Schema({
   }
 });
 
-const Reply = mongoose.model();
+ReplySchema.static('report', function(_id) {
+  return this.findByIdAndUpdate(_id, { reported: true });
+});
+
+ReplySchema.static('deleteWithPassword', function(_id, delete_password) {
+  return Thread.findOneAndDelete({ _id, delete_password })
+    .then(rec => {
+      if (rec) return true;
+      return false;
+    })
+    .catch(err => {
+      console.error(err); // temp solution for development
+    });
+});
+
+const Reply = mongoose.model('Reply', ReplySchema);
 
 module.exports = Reply;

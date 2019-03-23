@@ -60,6 +60,23 @@ ThreadSchema.static('deleteWithPassword', function(_id, delete_password) {
 // every thread is returned with only the most recent 3 replies
 ThreadSchema.static('getLastTen', function(board) {});
 
+// returns thread with all replies
+ThreadSchema.static('get', function(_id) {}); 
+
+ThreadSchema.static('addReply', function(threadId, replyId) {
+  return this.findByIdAndUpdate(threadId, { $push: { replies: replyId } });
+});
+
+ThreadSchema.static('removeReply', function(threadId, replyId) {
+  return this.findById(threadId)
+    .then(rec => {
+      const updatedReplies = rec.replies.filter(reply => reply !== replyId);
+      rec.replies = [...updatedReplies];
+      return rec.save();
+    })
+    .catch(err => err); // temp solution 
+});
+
 const Thread = mongoose.model('Thread', ThreadSchema);
 
 module.exports = Thread;
