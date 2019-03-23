@@ -17,31 +17,22 @@ const createThread = (done, thread) => {
 
 // if first param is omitted, then method should delete first thread it finds
 // delete thread and remove its ref from the board
-const deleteThread = (done, threadId = null) => {
-  const _removeThreadFromBoard = (board, thread) => {
-    let updatedThreads = board.threads.filter(t => t !== thread)
-    board.threads = [...updatedThreads];
-    return board.save();
-  };
-
-  const _clearThreadsInBoard = board => {
-    board.threads = [];
-    return board.save();
-  };
-  
+const deleteThread = (done, threadId = null) => {    
   let query = threadId ? Thread.findByIdAndDelete(threaId) : Thread.deleteOne({});
 
   query
     .then(() => Board.findOne())
     .then(board => {
-      if (threaId) return _removeThreadFromBoard(board, threaId);
-      return _clearThreadsInBoard(board);
+      if (threaId) return Board.removeThread(board, threaId);
+      return Board.clear(board);
     })
     .then(() => {
       console.log('thread deleted');
         done();
     })
-    .catch(err => {});
+    .catch(err => {
+      console.log(err); // temp solution for development
+    });
 };
 
 // create reply and add it to thread
@@ -49,7 +40,7 @@ const createReply = (done, thread_id, reply) => {
   const r = new Reply(done, reply);
   r.save()
     .then(res => res._id)
-    .then(reply => Thread.findByIdAndUpdate(thread_id, { $push: { replies: reply } }))
+    .then(reply => Thread.addReply(thread_id, reply))
     .then(() => {
       console.log('reply created');
       done();
@@ -59,31 +50,21 @@ const createReply = (done, thread_id, reply) => {
 
 // if reply_id is omitted, first reply being founded will be deleted
 // delete reply and remove its ref from its thread
-const deleteReply = (done, thread_id, reply_id = null) => {
-  const _removeReplyFromThread = (reply, thread) => {
-    let updatedReplies = thread.replies.filter(r => r !== reply);
-    thread.replies = [...updatedReplies];
-    return thread.save();
-  }; 
-
-  const _clearRepliesInThread = thread => {
-    thread.replies = [];
-    return thread.save();
-  };
-
+const deleteReply = (done, thread_id, reply_id = null) => {  
   let query = reply_id ? Reply.findByIdAndDelete(reply_id) : Reply.deleteOne({});
 
   query
-    .then(() => Thread.findById(thread_id))
-    .then(thread => {
-      if (reply_id) return _removeReplyFromThread(reply_id, thread);
-      return _clearRepliesInThread(thread);
+    .then(() => {
+      if (reply_id) return Thread.removeReply(thread_id, reply_id);
+      return Thread.clear(thread_id);
     })
     .then(() => {
       console.log('thread deleted');
       done();
     })
-    .catch(err => {});
+    .catch(err => {
+      console.error(err);
+    });
 };
 
 module.exports = {
