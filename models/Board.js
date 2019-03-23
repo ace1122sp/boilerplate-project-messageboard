@@ -51,6 +51,15 @@ BoardSchema.static('removeThread', function(boardName, threadId) {
     .catch(err => err);
 });
 
+BoardSchema.static('clear', function(boardName) {
+  return this.findOne({ name: boardName })
+    .then(rec => {
+      rec.threads = [];
+      return rec.save();
+    })
+    .catch(err => err);
+});
+
 const Board = mongoose.model('Board', BoardSchema);
 
 module.exports = Board;
