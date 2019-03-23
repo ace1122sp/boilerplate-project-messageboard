@@ -62,7 +62,7 @@ const deleteThread = (req, res) => {
   Thread.deleteWithPassword(thread_id, delete_password)
     .then(status => {
       if (status) {
-        Board.remove(board, thread_id)
+        Board.removeThread(board, thread_id)
           .then(() => {
             res.send('success');          
           })

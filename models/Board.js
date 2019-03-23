@@ -41,7 +41,7 @@ BoardSchema.static('addThread', function(boardName, threadId) {
   return this.findOneAndUpdate({ name: boardName }, { $push: { threads: threadId } });
 });
 
-BoardSchema.static('remove', function(boardName, threadId) {
+BoardSchema.static('removeThread', function(boardName, threadId) {
   return this.findOne({ name: boardName })
     .then(rec => {
       const updatedThreads = rec.threads.filter(thread => thread !== threadId);
