@@ -41,6 +41,16 @@ BoardSchema.static('add', function(boardName, threadId) {
   return this.findOneAndUpdate({ name: boardName }, { $push: { threads: threadId } });
 });
 
+BoardSchema.static('remove', function(boardName, threadId) {
+  return this.findOne({ name: boardName })
+    .then(res => {
+      const updatedThreads = res.threads.filter(thread => thread !== threadId);
+      res.threads = [...updatedThreads];
+      return res.save()
+    })
+    .catch(err => err);
+});
+
 const Board = mongoose.model('Board', BoardSchema);
 
 module.exports = Board;

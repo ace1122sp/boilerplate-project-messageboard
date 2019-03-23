@@ -55,13 +55,18 @@ const reportThread = (req, res) => {
 
 const deleteThread = (req, res) => {
   // need to validate
+  const board = req.params.board;
   const thread_id = req.body.thread_id;
   const delete_password = req.body.delete_password;
 
   Thread.deleteWithPassword(thread_id, delete_password)
     .then(status => {
       if (status) {
-        res.send('success');
+        Board.remove(board, thread_id)
+          .then(() => {
+            res.send('success');          
+          })
+          .catch(err => err);
       } else {
         res.send('incorrect password');
       }
