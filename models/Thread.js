@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { THREAD_MIN_LENGTH, THREAD_MAX_LENGTH, PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } = require('../config/constants');
+const { THREAD_MIN_LENGTH, THREAD_MAX_LENGTH, PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH, DEFAULT_REPLY_LIMIT } = require('../config/constants');
 
 mongoose.Promise = global.Promise;
 
@@ -56,14 +56,10 @@ ThreadSchema.static('deleteWithPassword', function(_id, delete_password) {
     });
 });
 
-// returns 10 last bumped threads on the board
-// every thread is returned with only the most recent 3 replies
-ThreadSchema.static('getLastTen', function(board) {});
-
 // returns thread with all replies
-ThreadSchema.static('get', function(_id) {
+ThreadSchema.static('get', function(_id, limit = DEFAULT_REPLY_LIMIT) {
   return this.findById(_id)
-    .populate({ path: 'replies' , select: '_id text created_on reported' });    
+    .populate({ path: 'replies' , select: '_id text created_on reported', options: { limit } });    
 }); 
 
 ThreadSchema.static('addReply', function(threadId, replyId) {
