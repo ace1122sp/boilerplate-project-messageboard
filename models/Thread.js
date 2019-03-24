@@ -61,20 +61,13 @@ ThreadSchema.static('deleteWithPassword', function(_id, delete_password) {
 ThreadSchema.static('getLastTen', function(board) {});
 
 // returns thread with all replies
-ThreadSchema.static('get', function(_id) {}); 
+ThreadSchema.static('get', function(_id) {
+  return this.findById(_id)
+    .populate({ path: 'replies' , select: '_id text created_on reported' });    
+}); 
 
 ThreadSchema.static('addReply', function(threadId, replyId) {
   return this.findByIdAndUpdate(threadId, { $push: { replies: replyId } });
-});
-
-ThreadSchema.static('removeReply', function(threadId, replyId) {
-  return this.findById(threadId)
-    .then(rec => {
-      const updatedReplies = rec.replies.filter(reply => reply !== replyId);
-      rec.replies = [...updatedReplies];
-      return rec.save();
-    })
-    .catch(err => err); // temp solution 
 });
 
 ThreadSchema.static('clear', function(_id) {
