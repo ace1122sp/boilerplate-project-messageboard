@@ -7,8 +7,8 @@ const getThreads = (req, res) => {
   const board = req.params.board;
 
   Board.getLastTen(board)
-    .then(threads => {
-      res.json(threads);
+    .then(rec => {
+      res.json(rec);
     })
     .catch(err => {
       console.error(err); // temp solution for development
