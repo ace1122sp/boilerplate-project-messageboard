@@ -34,14 +34,13 @@ suite('Functional Tests', () => {
           text: 'test text',
           delete_password: '12345'
         };
-        const expectedStatus = 201;
+        const expectedStatus = 200;
         const expectedBody = {
           _id: null,
           text: 'test text',
           created_on: Date.now(),
           bumped_on: Date.now(),
           reported: false,
-          delete_password: null,
           replies: []
         };
 
