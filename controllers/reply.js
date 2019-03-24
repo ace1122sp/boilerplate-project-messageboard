@@ -4,7 +4,7 @@ const Reply = require('../models/Reply');
 
 const getThread = (req, res) => {
   // to validate 
-  const thread_id = req.queries.thread_id;
+  const thread_id = req.query.thread_id;
 
   Thread.get(thread_id)
     .then(rec => {
@@ -65,11 +65,7 @@ const deleteReply = (req, res) => {
   Reply.deleteWithPassword(reply_id, delete_password)
     .then(status => {
       if (status) {
-        Thread.removeReply(thread_id, reply_id)
-          .then(() => {
-            res.send('success');
-          })
-          .catch(err => err);
+        res.send('success');
       } else {
         res.send('incorrect password');
       }
