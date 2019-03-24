@@ -25,7 +25,7 @@ const ReplySchema = new mongoose.Schema({
   },
   delete_password: {
     type: String,
-    min: PASSWORD_MIN_LENGTH,
+    min: PASSWORD_MIN_LENGTH,   
     max: PASSWORD_MAX_LENGTH,
     required: true
   }
@@ -36,7 +36,7 @@ ReplySchema.static('report', function(_id) {
 });
 
 ReplySchema.static('deleteWithPassword', function(_id, delete_password) {
-  return Thread.findOneAndDelete({ _id, delete_password })
+  return Thread.findOneAndUpdate({ _id, delete_password }, { text: '[deleted]' })
     .then(rec => {
       if (rec) return true;
       return false;
