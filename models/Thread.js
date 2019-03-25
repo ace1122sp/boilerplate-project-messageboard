@@ -63,7 +63,7 @@ ThreadSchema.static('get', function(_id, limit = DEFAULT_REPLY_LIMIT) {
 }); 
 
 ThreadSchema.static('addReply', function(threadId, replyId) {
-  return this.findByIdAndUpdate(threadId, { $push: { replies: replyId } });
+  return this.findByIdAndUpdate(threadId, { $push: { replies: replyId }, $set: { bumped_on: new Date() } });
 });
 
 ThreadSchema.static('clear', function(_id) {
