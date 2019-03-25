@@ -3,7 +3,6 @@ const Thread = require('../models/Thread');
 const Reply = require('../models/Reply');
 
 const getThread = (req, res) => {
-  // to validate 
   const thread_id = req.query.thread_id;
 
   Thread.get(thread_id)
@@ -16,7 +15,6 @@ const getThread = (req, res) => {
 };
 
 const addReply = (req, res) => {
-  // validation needed
   const board = req.params.board;
   const thread_id = req.body.thread_id;
   const replyParams = {
@@ -42,7 +40,6 @@ const addReply = (req, res) => {
 };
 
 const reportReply = (req, res) => {
-  // to validate
   const thread_id = req.body.thread_id; // atm i dont need this
   const reply_id = req.body.reply_id;
 
@@ -56,7 +53,6 @@ const reportReply = (req, res) => {
 };
 
 const deleteReply = (req, res) => {
-  // need to validate
   const board = req.params.board;
   const thread_id = req.params.thread_id;
   const reply_id = req.params.reply_id;

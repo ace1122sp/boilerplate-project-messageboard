@@ -3,7 +3,6 @@ const Thread = require('../models/Thread');
 const uuid = require('uuid/v4');
 
 const getThreads = (req, res) => {
-  // to validate
   const board = req.params.board;
 
   Board.getLastTen(board)
@@ -16,7 +15,6 @@ const getThreads = (req, res) => {
 };
 
 const addThread = (req, res) => {
-  // validation needed
   const board = req.params.board;
   const threadParams = {
     _id: uuid(),
@@ -41,7 +39,6 @@ const addThread = (req, res) => {
 };
 
 const reportThread = (req, res) => {
-  // to validate
   const _id = req.body.thread_id;
 
   Thread.report(_id)
@@ -54,7 +51,6 @@ const reportThread = (req, res) => {
 };
 
 const deleteThread = (req, res) => {
-  // need to validate
   const board = req.params.board;
   const thread_id = req.body.thread_id;
   const delete_password = req.body.delete_password;
