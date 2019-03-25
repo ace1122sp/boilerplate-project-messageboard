@@ -10,7 +10,7 @@ const apiRoutes = require('./routes/api.js');
 const fccTestingRoutes = require('./routes/fcctesting.js');
 const runner = require('./test-runner');
 const dbConnect = require('./libs/db');
-const { sendIndexHTML, notFound } = require('./controllers/general');
+const { sendIndexHTML, notFound, redirectToCompressedStaticJS } = require('./controllers/general');
  
 const PORT = config.app.port || 3000;
 
@@ -19,12 +19,25 @@ const app = express();
 // connect to db
 dbConnect(config.db.mongoURI);
 
-app.use('/public', express.static(process.cwd() + '/public'));
-
+// set headers
 app.use(cors({origin: '*'})); //For FCC testing purposes only
+app.use(helmet());
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
+app.use((req, res, next) => {
+  res.set({
+    'Content-Security-Policy': "default-src 'self' 'unsafe-eval' 'unsafe-inline'; img-src 'self'; base-uri 'none'"
+  });
+  next();
+});
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// add gzip config
+app.get('*', redirectToCompressedStaticJS);
+
+// serve static files
+app.use('/public', express.static(process.cwd() + '/public'));
 
 //Routing for API 
 apiRoutes(app);
