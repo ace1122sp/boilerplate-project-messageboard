@@ -8,7 +8,7 @@
 
 const chaiHttp = require('chai-http');
 const chai = require('chai');
-const { suite, test, setup, teardown } = require('mocha');
+const { suite, test, suiteSetup, suiteTeardown, setup, teardown } = require('mocha');
 const uuid = require('uuid/v4');
 
 const server = require('../server');

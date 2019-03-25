@@ -18,12 +18,12 @@ const createThread = (done, thread) => {
 // if first param is omitted, then method should delete first thread it finds
 // delete thread and remove its ref from the board
 const deleteThread = (done, threadId = null) => {    
-  let query = threadId ? Thread.findByIdAndDelete(threaId) : Thread.deleteOne({});
+  let query = threadId ? Thread.findByIdAndDelete(threadId) : Thread.deleteOne({});
 
   query
     .then(() => Board.findOne())
     .then(board => {
-      if (threaId) return Board.removeThread(board, threaId);
+      if (threadId) return Board.removeThread(board, threadId);
       return Board.clear(board);
     })
     .then(() => {
@@ -55,7 +55,6 @@ const deleteReply = (done, thread_id, reply_id = null) => {
 
   query
     .then(() => {
-      if (reply_id) return Thread.removeReply(thread_id, reply_id);
       return Thread.clear(thread_id);
     })
     .then(() => {

@@ -4,6 +4,7 @@ if (process.env.NODE_ENV === 'development') require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const config = require('./config');
 const apiRoutes = require('./routes/api.js');
@@ -34,7 +35,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // add gzip config
-app.get('*', redirectToCompressedStaticJS);
+// app.get('*', redirectToCompressedStaticJS);
 
 // serve static files
 app.use('/public', express.static(process.cwd() + '/public'));
@@ -48,6 +49,8 @@ app.route('/*')
 
 //For FCC testing purposes
 fccTestingRoutes(app);
+
+// add error handling
     
 //404 Not Found Middleware
 app.use(notFound);
