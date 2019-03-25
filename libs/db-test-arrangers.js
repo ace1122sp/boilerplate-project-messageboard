@@ -2,17 +2,45 @@ const Board = require('../models/Board');
 const Thread = require('../models/Thread');
 const Reply = require('../models/Reply');
 
+const createBoard = (done, board) => {
+  const b = new Board(board);
+  b.save()
+    .then(rec => {
+      console.log(`board ${board.name} created`);
+      done();
+    })
+    .catch(err => {
+      console.log(err); // temp for dev
+      done();
+    });
+};
+
+const deleteBoard = (done, name) => {
+  Board.findOneAndDelete({ name })
+    .then(() => {
+      console.log(`board ${name} deleted`);
+      done();
+    })
+    .catch(err => {
+      console.log(err); 
+      done();
+    });
+};
+
 // create thread and update board with it 
 const createThread = (done, thread) => {
   const t = new Thread(thread);
   t.save()
-    .then(res => res._id)
+    .then(rec => rec._id)
     .then(thread => Board.findOneAndUpdate({}, { $push: { threads: thread } }))
     .then(() => {
       console.log('thread created');
       done();
     })
-    .catch(err => {});
+    .catch(err => {
+      console.log(err); // temp for dev
+      done();
+    });
 }; 
 
 // if first param is omitted, then method should delete first thread it finds
@@ -22,16 +50,17 @@ const deleteThread = (done, threadId = null) => {
 
   query
     .then(() => Board.findOne())
-    .then(board => {
-      if (threadId) return Board.removeThread(board, threadId);
-      return Board.clear(board);
+    .then(rec => {
+      if (threadId) return Board.removeThread(rec, threadId);
+      return Board.clear(rec);
     })
     .then(() => {
       console.log('thread deleted');
-        done();
+      done();
     })
     .catch(err => {
       console.log(err); // temp solution for development
+      done();
     });
 };
 
@@ -39,13 +68,16 @@ const deleteThread = (done, threadId = null) => {
 const createReply = (done, thread_id, reply) => {
   const r = new Reply(done, reply);
   r.save()
-    .then(res => res._id)
+    .then(rec => rec._id)
     .then(reply => Thread.addReply(thread_id, reply))
     .then(() => {
       console.log('reply created');
       done();
     })
-    .catch(err => {});
+    .catch(err => {
+      console.log(err); // temp for dev
+      done();
+    });
 };
 
 // if reply_id is omitted, first reply being founded will be deleted
@@ -63,10 +95,13 @@ const deleteReply = (done, thread_id, reply_id = null) => {
     })
     .catch(err => {
       console.error(err);
+      done();
     });
 };
 
 module.exports = {
+  createBoard,
+  deleteBoard,
   createThread,
   deleteThread,
   createReply, 

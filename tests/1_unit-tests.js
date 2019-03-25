@@ -6,9 +6,6 @@
 *       (if additional are added, keep them at the very end!)
 */
 
-var chai = require('chai');
-var assert = chai.assert;
+const { suite } = require('mocha');
 
-// suite('Unit Tests', function(){
-
-// });
+suite.skip('Unit Tests', function(){});
