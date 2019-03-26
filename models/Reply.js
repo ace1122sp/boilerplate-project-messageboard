@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Thread = require('./Thread');
 
 const { REPLY_MIN_LENGTH, REPLY_MAX_LENGTH, PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH } = require('../config/constants');
 
@@ -36,7 +37,7 @@ ReplySchema.static('report', function(_id) {
 });
 
 ReplySchema.static('deleteWithPassword', function(_id, delete_password) {
-  return Thread.findOneAndUpdate({ _id, delete_password }, { text: '[deleted]' })
+  return this.findOneAndUpdate({ _id, delete_password }, { $set: { text: '[deleted]' } })
     .then(rec => {
       if (rec) return true;
       return false;

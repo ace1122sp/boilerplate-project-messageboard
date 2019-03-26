@@ -28,7 +28,14 @@ const addReply = (req, res) => {
   reply.save()
     .then(rec => {
       return Thread.addReply(thread_id, rec._id)
-        .then(() => rec)
+        .then(() => {
+          return Object.assign({
+            _id: rec._id,
+            text: rec.text,
+            created_on: rec.created_on,
+            reported: rec.reported
+          });
+        })
         .catch(err => err);
     })
     .then(rec => {
@@ -55,8 +62,8 @@ const reportReply = (req, res) => {
 const deleteReply = (req, res) => {
   const board = req.params.board;
   const thread_id = req.params.thread_id;
-  const reply_id = req.params.reply_id;
-  const delete_password = req.params.delete_password;
+  const reply_id = req.body.reply_id;
+  const delete_password = req.body.delete_password;
 
   Reply.deleteWithPassword(reply_id, delete_password)
     .then(status => {

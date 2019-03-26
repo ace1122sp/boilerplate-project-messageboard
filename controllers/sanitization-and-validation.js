@@ -12,9 +12,9 @@ const handleValidationErrors = (req, res, next) => {
   }
 };
 
-const board = param('board').isIn(BOARDS);
-const threadId = check('thread_id').isUUID(4);
-const replyId = body('reply_id').isUUID(4);
+const board = param('board', 'invalid board name').isIn(BOARDS);
+const threadId = check('thread_id', 'invalid thread id').isUUID(4);
+const replyId = body('reply_id', 'invalid reply_id').isUUID(4);
 const text = sanitizeBody('text').trim().escape();
 const deletePassword = sanitizeBody('delete_password').escape();
 
@@ -22,7 +22,7 @@ const checkThreads = {
   get: [board],
   post: [text, deletePassword, board],
   put: [threadId, board],
-  delete: [threadId, replyId, deletePassword, board]
+  delete: [threadId, deletePassword, board]
 };
 
 const checkReplies = {

@@ -65,8 +65,8 @@ const deleteThread = (done, threadId = null) => {
 };
 
 // create reply and add it to thread
-const createReply = (done, thread_id, reply) => {
-  const r = new Reply(done, reply);
+const createReply = (done, thread_id, replyParams) => {
+  const r = new Reply(replyParams);
   r.save()
     .then(rec => rec._id)
     .then(reply => Thread.addReply(thread_id, reply))
@@ -99,11 +99,24 @@ const deleteReply = (done, thread_id, reply_id = null) => {
     });
 };
 
+const deleteAllRepliesFromDb = done => {
+  Reply.deleteMany({})
+    .then(() => {
+      console.log('Reply collection deleted');
+      done();
+    })
+    .catch(err => {
+      console.error(err);
+      done();
+    });
+}
+
 module.exports = {
   createBoard,
   deleteBoard,
   createThread,
   deleteThread,
   createReply, 
-  deleteReply
+  deleteReply,
+  deleteAllRepliesFromDb
 };

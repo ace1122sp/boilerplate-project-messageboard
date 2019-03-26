@@ -9,7 +9,7 @@
 	"scripts": {
 		"start": "node ./bin/www",
 		"dev": "nodemon ./bin/www",
-		"test": "mocha ./tests",
+		"test": "cls && mocha ./tests",
 		"dev-client": "webpack --mode development --watch",
 		"client-build": "webpack --mode production && gzip public/client.bundle.js"
 	},

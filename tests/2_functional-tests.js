@@ -12,7 +12,7 @@ const { suite, test, suiteSetup, suiteTeardown, setup, teardown } = require('moc
 const uuid = require('uuid/v4');
 
 const server = require('../server');
-const { createThread, deleteThread, createReply, deleteReply } = require('../libs/db-test-arrangers');
+const { createBoard, deleteBoard, createThread, deleteThread, createReply, deleteReply, deleteAllRepliesFromDb } = require('../libs/db-test-arrangers');
 
 const assert = chai.assert;
 
@@ -21,9 +21,15 @@ chai.use(chaiHttp);
 // by default all statuses are 200 or 400
 // after you have written tests change response statuses according to specific case
 
-suite('Functional Tests', () => {
+suite('Functional Tests', function() {
   // arrange
   const ONE_DAY_LENGTH = 1000 * 60 * 60 * 24;
+
+  // create board 'general'
+  suiteSetup(done => {
+    console.log('suite setup');
+    createBoard(done, { _id: uuid(), name: 'general' });
+  });
 
   suite('API ROUTING FOR /api/threads/:board', () => {
     
@@ -54,7 +60,7 @@ suite('Functional Tests', () => {
 
             // assert
             assert.equal(actualStatus, expectedStatus);
-            assert.hasAllKeys(res, Object.keys(expectedBody));
+            assert.hasAllKeys(actualBody, Object.keys(expectedBody));
             assert.propertyVal(actualBody, 'text', expectedBody.text);
             assert.closeTo(Date.parse(actualBody.created_on), expectedBody.created_on, ONE_DAY_LENGTH);
             assert.closeTo(Date.parse(actualBody.bumped_on), expectedBody.bumped_on, ONE_DAY_LENGTH);
@@ -76,7 +82,6 @@ suite('Functional Tests', () => {
       let _id = uuid();
 
       setup(done => {
-        // arrange
         const thread = {
           _id,
           text: 'get - test thread 1',
@@ -95,7 +100,7 @@ suite('Functional Tests', () => {
           .get('/api/threads/general')
           .end((err, res) => {
             const actualStatus = res.status;
-            const actualBody = res.body;
+            const actualBody = res.body.threads;
 
             // assert
             assert.equal(actualStatus, expectedStatus);
@@ -116,7 +121,6 @@ suite('Functional Tests', () => {
       const _id = uuid();
 
       setup(done => {
-        // arrange
         const thread = {
           _id,
           text: 'delete - test thread',
@@ -124,6 +128,7 @@ suite('Functional Tests', () => {
         };
         createThread(done, thread);
       });
+
       test('successfully delete thread to /api/threads/general', done => {
         // arrange
         const requestBody = {
@@ -135,11 +140,11 @@ suite('Functional Tests', () => {
 
         // act
         chai.request(server)
-          .delete('/api/threads/general')
-          .send(requestBody)
-          .end((err, res) => {
-            const actualStatus = 200;
-            const actualResponse = res.body;
+        .delete('/api/threads/general')
+        .send(requestBody)
+        .end((err, res) => {
+          const actualStatus = 200;
+          const actualResponse = res.text;
 
             //assert
             assert.equal(actualStatus, expectedStatus);
@@ -155,7 +160,6 @@ suite('Functional Tests', () => {
       const _id = uuid();
 
       setup(done => {
-        // arrange
         const thread = {
           _id, 
           text: 'put - test thread',
@@ -163,6 +167,7 @@ suite('Functional Tests', () => {
         };
         createThread(done, thread);
       });
+
       test('successfully report thread to /api/threads/general', done => {
         // arrange
         const requestBody = {
@@ -177,7 +182,7 @@ suite('Functional Tests', () => {
           .send(requestBody)
           .end((err, res) => {
             const actualStatus = res.status;
-            const actualResponse = res.body;
+            const actualResponse = res.text;
 
             // assert
             assert.equal(actualStatus, expectedStatus);
@@ -220,18 +225,17 @@ suite('Functional Tests', () => {
           _id: null,
           text: 'reply text',
           created_on: Date.now(),
-          delete_password: 'reply_password',
           reported: false
         };
 
         // act 
         chai.request(server) 
-          .post('/api/threads/general')
+          .post('/api/replies/general')
           .send(requestBody)
           .end((err, res) => {
             const actualStatus = res.status;
             const actualBody = res.body;            
-
+            
             // assert
             assert.equal(actualStatus, expectedStatus);
             assert.hasAllKeys(actualBody, Object.keys(expectedBody));
@@ -244,8 +248,7 @@ suite('Functional Tests', () => {
       });
 
       teardown(done => {
-        // should delete created reply
-        deleteReply(done, thread_id);
+        deleteReply(done, threadId);
       });
     });
     
@@ -256,7 +259,7 @@ suite('Functional Tests', () => {
         const expectedBody = {
           _id: threadId,
           text: 'Replies Test Suite',
-          create_on: null,
+          created_on: null,
           bumped_on: null,
           reported: false,
           replies: []
@@ -284,7 +287,7 @@ suite('Functional Tests', () => {
       const reply_id = uuid();
 
       setup(done => {
-        createReply(done, threadId, reply_id);
+        createReply(done, threadId, { _id: reply_id, text: 'test reply', delete_password: '12345' });
       });
 
       test('report a reply', done => {
@@ -302,7 +305,7 @@ suite('Functional Tests', () => {
           .send(requestBody)
           .end((err, res) => {
             const actualStatus = res.status;
-            const actualResponse = res.body;
+            const actualResponse = res.text;
             
             // assert
             assert.equal(actualStatus, expectedStatus);
@@ -319,43 +322,55 @@ suite('Functional Tests', () => {
     
     suite('DELETE', () => {
       // arrange 
-      const reply_id = uuid();
-      const delete_password = 'reply_delete';
+      const replyParams = {
+        _id: uuid(),
+        text: 'testreply',
+        delete_password: '12345'
+      };
 
       setup(done => {
-        createReply(done, threadId, reply_id);
+        createReply(done, threadId, replyParams);
       });
 
       test('delete a reply', done => {
         // arrange
         const requestBody = {
-          thread_id: threaId,
-          reply_id,
-          delete_password
+          thread_id: threadId,
+          reply_id: replyParams._id,
+          delete_password: replyParams.delete_password
         };
         const expectedStatus = 200;
-        const expectedResponse = 'success';
-        
+        const expectedResponse = 'success';                    
+
         // act
         chai.request(server)
           .delete('/api/replies/general')
           .send(requestBody)
           .end((err, res) => {
             const actualStatus = res.status;
-            const actualResponse = res.body;
+            const actualResponse = res.text;
 
             // assert
             assert.equal(actualStatus, expectedStatus);
-            assert.equeal(actualResponse, expectedResponse);
+            assert.equal(actualResponse, expectedResponse);
 
             done();
           });
       });
+
+      teardown(done => {
+        deleteAllRepliesFromDb(done);
+      });
     });
     
     suiteTeardown(done => {
-      deleteThread(done, threaId);
+      deleteThread(done, threadId);
     });
   });
 
+  // delete board 'general'
+  suiteTeardown(done => {
+    console.log('suite teardown');
+    deleteBoard(done, 'general');
+  });
 });

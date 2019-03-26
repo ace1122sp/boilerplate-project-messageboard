@@ -46,7 +46,7 @@ ThreadSchema.static('report', function(_id) {
 });
 
 ThreadSchema.static('deleteWithPassword', function(_id, delete_password) {
-  return Thread.findOneAndDelete({ _id, delete_password })
+  return this.findOneAndDelete({ _id, delete_password })
     .then(rec => {
       if (rec) return true;
       return false;
@@ -58,7 +58,7 @@ ThreadSchema.static('deleteWithPassword', function(_id, delete_password) {
 
 // returns thread with all replies
 ThreadSchema.static('get', function(_id, limit = DEFAULT_REPLY_LIMIT) {
-  return this.findById(_id)
+  return this.findById(_id, '-__v -delete_password')
     .populate({ path: 'replies' , select: '_id text created_on reported', options: { limit } });    
 }); 
 

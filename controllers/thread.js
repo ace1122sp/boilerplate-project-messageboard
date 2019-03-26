@@ -27,7 +27,16 @@ const addThread = (req, res) => {
   thread.save()
     .then(rec => {
       return Board.addThread(board, rec._id)
-        .then(() => rec)
+        .then(() => {
+          return Object.assign({
+            _id: rec._id,
+            text: rec.text,
+            created_on: rec.created_on,
+            bumped_on: rec.bumped_on,
+            reported: rec.reported,
+            replies: rec.replies
+          });
+        })
         .catch(err => err);
     })
     .then(rec => {
