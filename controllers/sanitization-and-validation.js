@@ -1,5 +1,5 @@
-const { sanitizeBody } = require('express-validator/filter');
-const { check, body, param, validationResult } = require('express-validator/check');
+const { sanitizeBody, sanitizeQuery } = require('express-validator/filter');
+const { check, body, param, query, validationResult } = require('express-validator/check');
 const { BOARDS } = require('../config/constants');
 
 const handleValidationErrors = (req, res, next) => {
@@ -13,13 +13,15 @@ const handleValidationErrors = (req, res, next) => {
 };
 
 const board = param('board', 'invalid board name').isIn(BOARDS);
+const offsetConvert = sanitizeQuery('offset').toInt();
+const offset = query('offset', 'invalid offset value').optional().isInt();
 const threadId = check('thread_id', 'invalid thread id').isUUID(4);
 const replyId = body('reply_id', 'invalid reply_id').isUUID(4);
 const text = sanitizeBody('text').trim().escape();
 const deletePassword = sanitizeBody('delete_password').escape();
 
 const checkThreads = {
-  get: [board],
+  get: [board, offsetConvert, offset],
   post: [text, deletePassword, board],
   put: [threadId, board],
   delete: [threadId, deletePassword, board]

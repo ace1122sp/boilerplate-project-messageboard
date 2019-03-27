@@ -4,8 +4,9 @@ const uuid = require('uuid/v4');
 
 const getThreads = (req, res) => {
   const board = req.params.board;
+  const offset = req.query.offset || null;
 
-  Board.getLastTen(board)
+  Board.getTen(board, offset)
     .then(rec => {
       res.json(rec);
     })

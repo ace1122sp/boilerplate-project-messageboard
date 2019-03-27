@@ -51,12 +51,12 @@ BoardSchema.static('removeThread', function(boardName, threadId) {
     .catch(err => err);
 });
 
-BoardSchema.static('getLastTen', function(board) {
+BoardSchema.static('getTen', function(board, offset = null) {
   return this.findOne({ name: board })
     .populate({ 
       path: 'threads', 
       select: '_id text created_on bumped_on reported replies', 
-      options: { sort: { bumped_on: -1 }, limit: 10 },
+      options: { sort: { bumped_on: -1 }, limit: 10, skip: offset },
       populate: { path: 'replies', select: '_id text created_on reported', options: { limit: 3 } } 
     });
 });
