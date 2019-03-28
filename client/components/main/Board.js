@@ -1,6 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import ThreadCard from '../helper/ThreadCard';
+
+// delete this
+const fakeThread = {
+  _id: '00',
+  text: 'Fake Thread',
+  created_on: '11:22',
+  bumped_on: '11:22',
+  reported: false,
+  delete_password: '12345',
+  replies: []
+};
 
 const Board = () => 
   <main>
@@ -9,9 +21,7 @@ const Board = () =>
     </div>
     <section>
       <ul>
-        <Link to='/b/general/earth'>earth</Link>
-        <Link to='/b/general/mars'>mars</Link>
-        <Link to='/b/general/jupiter'>jupiter</Link>
+        <li><ThreadCard thread={fakeThread} /></li>
       </ul>
     </section>
   </main>
