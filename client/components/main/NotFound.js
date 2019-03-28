@@ -2,7 +2,9 @@ import React from 'react';
 
 const NotFound = () => 
   <main>
-    this is NotFound placeholder
+    <div>
+      <h2>404... Not Found!</h2>
+    </div>
   </main>
 
 export default NotFound;
