@@ -1,15 +1,43 @@
 import axios from 'axios';
 
+const _baseReq = config => axios(config)
+  .then(res => res.data)
+  .catch(err => Promise.reject(err))
+
 export const getThreads = url => {
-  return axios(url)
-    .then(res => {
-      return res.data.threads;
-    })
-    .catch(err => Promise.reject(err));
-}
+  const config = { url };
+  return _baseReq(config);
+};
 
-export const postThread = () => {}
+export const postThread = (url, data) => {
+  const config = {
+    url,
+    method: 'post',
+    headers: {},
+    data
+  };
 
-export const reportThread = () => {}
+  return _baseReq(config);
+};
 
-export const deleteThread = () => {}
+export const reportThread = (url, thread_id) => {
+  const config = {
+    method: 'put',
+    url, 
+    headers: { 'Content-Type': 'application/json' },
+    data: { thread_id }
+  };
+  
+  return _baseReq(config);
+};
+
+export const deleteThread = (url, data) => {
+  const config = {
+    method: 'delete',
+    url, 
+    headers: { 'Content-Type': 'application/json' },
+    data
+  };
+  
+  return _baseReq(config);
+};
