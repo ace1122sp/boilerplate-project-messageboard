@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { reportThread } from '../../libs/threadAPI';
+
 import { Link } from 'react-router-dom';
 
-const ThreadCard = ({ thread }) => {
+const ThreadCard = ({ thread, apiUrl }) => {
   const replies = thread.replies.map(reply => <li key={reply._id}>{reply.text}</li>);
+  const [text, updateThreadText] = useState(() => thread.reported ? 'reported' : <Link to={`/b/general/${thread.text}`}>{thread.text}</Link>);
+  
+  const report = () => {    
+    reportThread(apiUrl, thread._id)
+      .then(res => {
+        if (res === 'success') {
+          updateThreadText('reported');
+        }
+      })
+      .catch(err => {
+        console.error(err); // temp solution for development
+      });
+  };
   
   return (
     <div>
       <div>
-        <h3><Link to={`/b/general/${thread.text}`}>{thread.text}</Link></h3>
+        <h3>{text}</h3>
         <div>
-          <button>report</button>
+          <button onClick={report}>report</button>
           <button><FontAwesomeIcon size='1x' icon='angle-down' /></button>
           <button>x</button>
         </div>
