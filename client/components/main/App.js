@@ -17,7 +17,7 @@ const App = () =>
     <Header />
     <Switch>
       <Route exact path='/' component={Board} />
-      <Route path='/b/:board/:thread' component={Thread} />
+      <Route path='/b/:board/:thread_id' render={props => <Thread {...props} />} />
       <Route path='/' component={NotFound} />
     </Switch>
     <Footer />

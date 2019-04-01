@@ -5,7 +5,7 @@ const ReplyCard = ({ reply }) =>
     <button>x</button>
     <p>{reply.text}</p>
     <div>
-      <p>created on: <time>## ##</time></p>
+      <p>created on: <time>{reply.created_on}</time></p>
       <button>report</button>
     </div>
   </div>

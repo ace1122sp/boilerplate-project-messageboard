@@ -1,29 +1,48 @@
-import React from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { get, post, remove } from '../../libs/apiHandler';
+import { threadURL } from '../../libs/urlHandler';
+
+import BoardContext from '../contexts/BoardContext';
 import ThreadCard from '../helper/ThreadCard';
+import EmptyBoard from '../helper/EmptyBoard';
 
-// delete this
-const fakeThread = {
-  _id: '00',
-  text: 'Fake Thread',
-  created_on: '11:22',
-  bumped_on: '11:22',
-  reported: false,
-  delete_password: '12345',
-  replies: []
-};
+const Board = () => {
+  const board = useContext(BoardContext);
+  const [threads, setThreads] = useState([]);
+  const [loading, setLoadingStatus] = useState(true);
 
-const Board = () => 
-  <main>
-    <div>
-      <button><FontAwesomeIcon size='1x' icon='plus' />add thread</button>
-    </div>
-    <section>
-      <ul>
-        <li><ThreadCard thread={fakeThread} /></li>
-      </ul>
-    </section>
-  </main>
+  const showThreadCards = threads.map(thread => <ThreadCard key={thread._id} thread={thread} apiUrl={threadURL(board)} />);
+  
+  useEffect(() => {
+    setInitThreads(threadURL(board));
+  }, []);
 
+  const setInitThreads = url => {
+    get(url)
+      .then(res => {
+        setThreads([...res.threads]);
+        setLoadingStatus('false');
+      })
+      .catch(err => {
+        console.log(err) // temp solution
+      });
+  }
+
+  return (
+    <main>
+      <div>
+        <button><FontAwesomeIcon size='1x' icon='plus' />add thread</button>
+      </div>
+      <section>
+        {threads.length === 0 && <EmptyBoard />}
+        <ul>
+          {showThreadCards}
+        </ul>
+      </section>
+    </main>
+  );
+}
+  
 export default Board;

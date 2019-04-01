@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 const ThreadCard = ({ thread, apiUrl }) => {
   const replies = thread.replies.map(reply => <li key={reply._id}>{reply.text}</li>);
-  const [text, updateThreadText] = useState(() => thread.reported ? 'reported' : <Link to={`/b/general/${thread.text}`}>{thread.text}</Link>);
+  const [text, updateThreadText] = useState(() => thread.reported ? 'reported' : <Link to={`/b/general/${thread._id}`}>{thread.text}</Link>);
   
   const reportThread = () => {    
     report(apiUrl, { thread_id: thread._id })
