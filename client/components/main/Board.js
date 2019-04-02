@@ -17,8 +17,6 @@ const Board = () => {
   const [threadToDelete, setThreadToDelete] = useState(null);
   const [loading, setLoadingStatus] = useState(true);
 
-  const showThreadCards = threads.map(thread => <ThreadCard key={thread._id} thread={thread} apiUrl={threadURL(board)} setThreadToDelete={setThreadToDelete} />);
-  
   useEffect(() => {
     setInitThreads(threadURL(board));
   }, []);
@@ -70,6 +68,8 @@ const Board = () => {
         console.error(err); // temp solution for development
       });
   };
+
+  const showThreadCards = threads.map(thread => <ThreadCard key={thread._id} thread={thread} apiUrl={threadURL(board)} setThreadToDelete={setThreadToDelete} />);
 
   return (
     <main>

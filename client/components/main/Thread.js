@@ -12,7 +12,8 @@ const Thread = ({ match }) => {
   const board = useContext(BoardContext);
   const [thread, setThread] = useState({ replies: [] });
   const [newReply, updateNewReply] = useState('');
-  const [replyPasswordPanelOpened, toggleReplyPasswordPanel] = useState(false);
+  const [addReplyPasswordPanelOpened, toggleAddReplyPasswordPanel] = useState(false);
+  const [replyToDelete, setReplyToDelete] = useState(null);
   const [loading, setLoadingStatus] = useState(true);
 
   useEffect(() => {
@@ -61,23 +62,56 @@ const Thread = ({ match }) => {
 
   const addReply = e => {
     e.preventDefault();
-    toggleReplyPasswordPanel(true);
+    toggleAddReplyPasswordPanel(true);
   };
 
   const handleReplyChange = e => {
     updateNewReply(e.target.value);
   };
 
-  const closeReplyPasswordPanel = () => {
-    toggleReplyPasswordPanel(false);
+  const closeAddReplyPasswordPanel = () => {
+    toggleAddReplyPasswordPanel(false);
   };
 
+  const closeReplyDeletePasswordPanel = () => {
+    setReplyToDelete(null);
+  };
+
+  const _markDeletedReply = reply_id => {
+    const updatedReplies = thread.replies.map(reply => {
+      if (reply._id === reply_id) return { ...reply, text: '[deleted]' };
+      return reply;
+    });
+    return { ...thread, replies: updatedReplies };
+  }
+
+  const handleReplyDelete = delete_password => {
+    const data = {
+      thread_id: thread._id,
+      reply_id: replyToDelete,
+      delete_password
+    };
+    closeReplyDeletePasswordPanel(null);
+    remove(replyURL(board), data)
+      .then(res => {
+        if (res === 'success') {
+          console.log('reply deleted');
+          setThread(() => _markDeletedReply(data.reply_id));
+        } else {
+          console.log(res);
+        }
+      })
+      .catch(err => {
+        console.error(err); // temp solution for development
+      });
+  }
+
   const resetReply = () => {
-    closeReplyPasswordPanel();
+    closeAddReplyPasswordPanel();
     updateNewReply('');
   };
 
-  const _updateRepliesWithChangedReportedStatus = (reply_id) => {
+  const _updateRepliesWithChangedReportedStatus = reply_id => {
     const updatedReplies = thread.replies.map(reply => {
       if (reply._id === reply_id) return { ...reply, reported: true };
       return reply;
@@ -98,11 +132,12 @@ const Thread = ({ match }) => {
       });
   };
 
-  const showReplyCards = thread.replies.map(reply => <li key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} /></li>)
+  const showReplyCards = thread.replies.map(reply => <li key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} setReplyToDelete={setReplyToDelete} /></li>)
 
   return (
     <main>
-      {replyPasswordPanelOpened && <PasswordPanel message='Enter Reply Password' handler={handleReplyPost} close={resetReply} />}
+      {addReplyPasswordPanelOpened && <PasswordPanel message='Enter Reply Password' handler={handleReplyPost} close={resetReply} />}
+      {replyToDelete && <PasswordPanel message='Enter Reply Password' handler={handleReplyDelete} close={closeReplyDeletePasswordPanel} />}
       <div>
         <h2>{thread.text}</h2>
         <div>
