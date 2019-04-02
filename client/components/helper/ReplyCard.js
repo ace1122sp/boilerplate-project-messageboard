@@ -1,12 +1,12 @@
 import React from 'react';
 
-const ReplyCard = ({ reply }) => 
-  <div>
+const ReplyCard = ({ thread, reply, report }) => 
+  <div>    
     <button>x</button>
-    <p>{reply.text}</p>
+    <p>{reply.reported ? 'reported' : reply.text}</p>
     <div>
       <p>created on: <time>{reply.created_on}</time></p>
-      <button>report</button>
+      <button onClick={() => report(thread, reply._id)}>report</button>
     </div>
   </div>
 

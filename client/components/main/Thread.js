@@ -15,8 +15,6 @@ const Thread = ({ match }) => {
   const [replyPasswordPanelOpened, toggleReplyPasswordPanel] = useState(false);
   const [loading, setLoadingStatus] = useState(true);
 
-  const showReplyCards = thread.replies.map(reply => <li key={reply._id}><ReplyCard reply={reply} /></li>)
-
   useEffect(() => {
     initializeThread(replyURL(board) + `?thread_id=${match.params.thread_id}`);    
   }, []);
@@ -79,6 +77,27 @@ const Thread = ({ match }) => {
     closeReplyPasswordPanel();
     updateNewReply('');
   };
+
+  const reportReply = (thread_id, reply_id) => {
+    report(replyURL(board), { thread_id, reply_id })
+      .then(res => {
+        if (res === 'success') {
+          setThread(() => {
+            const updatedReplies = thread.replies.map(reply => {
+              if (reply._id === reply_id) return { ...reply, reported: true };
+              return reply;
+            });
+
+            return { ...thread, replies: updatedReplies };
+          });
+        }
+      })
+      .catch(err => {
+        console.error(err); // temp solution for development
+      });
+  };
+
+  const showReplyCards = thread.replies.map(reply => <li key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} /></li>)
 
   return (
     <main>
