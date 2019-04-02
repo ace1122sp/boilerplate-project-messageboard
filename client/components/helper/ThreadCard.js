@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { report } from '../../libs/apiHandler';
 
-import { Link } from 'react-router-dom';
-
-const ThreadCard = ({ thread, apiUrl }) => {
+const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
   const replies = thread.replies.map(reply => <li key={reply._id}>{reply.text}</li>);
   const [text, updateThreadText] = useState(() => thread.reported ? 'reported' : <Link to={`/b/general/${thread._id}`}>{thread.text}</Link>);
   
@@ -20,7 +19,11 @@ const ThreadCard = ({ thread, apiUrl }) => {
         console.error(err); // temp solution for development
       });
   };
-  
+
+  const deleteThread = () => {
+    setThreadToDelete(thread._id);
+  };
+
   return (
     <div>
       <div>
@@ -28,7 +31,7 @@ const ThreadCard = ({ thread, apiUrl }) => {
         <div>
           <button onClick={reportThread}>report</button>
           <button><FontAwesomeIcon size='1x' icon='angle-down' /></button>
-          <button>x</button>
+          <button onClick={deleteThread}>x</button>
         </div>
       </div>
       <section>
