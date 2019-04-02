@@ -34,8 +34,7 @@ const Thread = ({ match }) => {
 
   const addToReplies = reply => {
     setThread(() => {
-      const updatedReplies = [...thread.replies, reply];
-      return {...thread, replies: [...updatedReplies]};
+      return {...thread, replies: [...thread.replies, reply]};
     });
   }
 
@@ -49,8 +48,8 @@ const Thread = ({ match }) => {
     post(replyURL(board), data)
       .then(res => {
         if (res._id) {
-          addToReplies(res);
           console.log('reply added');
+          addToReplies(res);
         } else {
           console.log('something went wrong');
         }
@@ -78,18 +77,20 @@ const Thread = ({ match }) => {
     updateNewReply('');
   };
 
+  const _updateRepliesWithChangedReportedStatus = (reply_id) => {
+    const updatedReplies = thread.replies.map(reply => {
+      if (reply._id === reply_id) return { ...reply, reported: true };
+      return reply;
+    });
+
+    return { ...thread, replies: updatedReplies };
+  };
+
   const reportReply = (thread_id, reply_id) => {
     report(replyURL(board), { thread_id, reply_id })
       .then(res => {
         if (res === 'success') {
-          setThread(() => {
-            const updatedReplies = thread.replies.map(reply => {
-              if (reply._id === reply_id) return { ...reply, reported: true };
-              return reply;
-            });
-
-            return { ...thread, replies: updatedReplies };
-          });
+          setThread(() => _updateRepliesWithChangedReportedStatus(reply_id));
         }
       })
       .catch(err => {

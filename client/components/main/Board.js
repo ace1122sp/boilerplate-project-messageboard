@@ -13,9 +13,9 @@ import PasswordPanel from '../helper/PasswordPanel';
 const Board = () => {
   const board = useContext(BoardContext);
   const [threads, setThreads] = useState([]);
-  const [loading, setLoadingStatus] = useState(true);
   const [addThreadPanelOpened, toggleAddThreadPanel] = useState(false);
   const [threadToDelete, setThreadToDelete] = useState(null);
+  const [loading, setLoadingStatus] = useState(true);
 
   const showThreadCards = threads.map(thread => <ThreadCard key={thread._id} thread={thread} apiUrl={threadURL(board)} setThreadToDelete={setThreadToDelete} />);
   
@@ -46,6 +46,10 @@ const Board = () => {
     setThreads(() => [...threads, thread]);
   };
 
+  const removeFromThreads = thread => {
+    setThreads(() => threads.filter(t => t._id !== thread));
+  };
+
   const closePasswordPanel = () => {
     setThreadToDelete(null);
   };
@@ -65,10 +69,6 @@ const Board = () => {
       .catch(err => {
         console.error(err); // temp solution for development
       });
-  };
-
-  const removeFromThreads = thread => {
-    setThreads(() => threads.filter(t => t._id !== thread));
   };
 
   return (

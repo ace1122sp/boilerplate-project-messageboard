@@ -11,9 +11,7 @@ const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
   const reportThread = () => {    
     report(apiUrl, { thread_id: thread._id })
       .then(res => {
-        if (res === 'success') {
-          updateThreadText('reported');
-        }
+        if (res === 'success') updateThreadText('reported');
       })
       .catch(err => {
         console.error(err); // temp solution for development
