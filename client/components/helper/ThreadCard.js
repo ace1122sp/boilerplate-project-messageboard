@@ -31,7 +31,7 @@ const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
           {replies}
         </ul>      
         <aside>
-          <h4>{replies.length} replies</h4>
+          <h4>{replies.length} {replies.length === 1 ? 'reply' : 'replies'}</h4>
           <p>bumped on: {thread.bumped_on}</p>
         </aside>
       </section>
