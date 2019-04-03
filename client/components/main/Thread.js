@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { get, post, report, remove } from '../../libs/apiHandler';
+import { reportThread } from '../../libs/commmonActionMethods';
 import { threadURL, replyURL } from '../../libs/urlHandler';
 
 import BoardContext from '../contexts/BoardContext';
@@ -31,6 +32,12 @@ const Thread = ({ match }) => {
       .catch(err => {
         console.error(err); // temp solution
       });
+  };
+
+  const markReportedThread = () => {
+    setThread(() => {
+      return { ...thread, reported: true };
+    });
   };
 
   const addToReplies = reply => {
@@ -141,9 +148,9 @@ const Thread = ({ match }) => {
       {addReplyPasswordPanelOpened && <PasswordPanel message='Enter Reply Password' handler={handleReplyPost} close={resetReply} />}
       {replyToDelete && <PasswordPanel message='Enter Reply Password' handler={handleReplyDelete} close={closeReplyDeletePasswordPanel} />}
       <div>
-        <h2>{thread.text}</h2>
+        <h2>{thread.reported ? 'reported': thread.text}</h2>
         <div>
-          <button>report</button>
+          <button onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}>report</button>
           <button><FontAwesomeIcon size='1x' icon='trash-alt' /></button>
         </div>        
       </div>
