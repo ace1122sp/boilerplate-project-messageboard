@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 const PasswordPanel = ({ message, handler, close }) => {
-  const [password, updatePassword] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleChange = e => {
-    updatePassword(e.target.value);
+    setPassword(e.target.value);
   };
 
   const handleSubmit = e => {
