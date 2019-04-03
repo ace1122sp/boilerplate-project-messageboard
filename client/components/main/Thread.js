@@ -111,9 +111,11 @@ const Thread = ({ match }) => {
     updateNewReply('');
   };
 
-  const _updateRepliesWithChangedReportedStatus = reply_id => {
+  const _updateRepliesWithChangedReportedStatus = reply_id => {    
     const updatedReplies = thread.replies.map(reply => {
-      if (reply._id === reply_id) return { ...reply, reported: true };
+      
+      // find the newly reported reply and check if it has not been deleted before you can update 'reported' field
+      if (reply._id === reply_id && reply.text !== '[deleted]') return { ...reply, reported: true };
       return reply;
     });
 
