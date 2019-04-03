@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reportThread } from '../../libs/commmonActionMethods';
 
 const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
-  const replies = thread.replies.map(reply => <li key={reply._id}>{reply.text}</li>);
+  const replies = thread.replies.map(reply => <li key={reply._id}>{thread.reported ? '*****' : reply.text}</li>);
   const [text, updateThreadText] = useState(() => thread.reported ? 'reported' : <Link to={`/b/general/${thread._id}`}>{thread.text}</Link>);
 
   const markReportedThread = () => {
