@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
+import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { get, post, report, remove } from '../../libs/apiHandler';
@@ -12,7 +13,9 @@ import PasswordPanel from '../helper/PasswordPanel';
 const Thread = ({ match }) => {
   const board = useContext(BoardContext);
   const [thread, setThread] = useState({ replies: [] });
+  const [threadDeleted, markThreadAsDeleted] = useState(false);
   const [newReply, updateNewReply] = useState('');
+  const [threadDeletePasswordPanelOpened, toggleThreadDeletePasswordPanel] = useState(false);
   const [addReplyPasswordPanelOpened, toggleAddReplyPasswordPanel] = useState(false);
   const [replyToDelete, setReplyToDelete] = useState(null);
   const [loading, setLoadingStatus] = useState(true);
@@ -39,6 +42,26 @@ const Thread = ({ match }) => {
       return { ...thread, reported: true };
     });
   };
+
+  const handleThreadDelete = delete_password => {
+    const data = { thread_id: thread._id, delete_password };
+    toggleThreadDeletePasswordPanel(false);
+    remove(threadURL(board), data)
+      .then(res => {
+        if (res === 'success') {
+          markThreadAsDeleted(true);
+        } else {
+          console.log(res);
+        }
+      })
+      .catch(err => {
+        console.error(err); // temp solution for development
+      });
+  };
+
+  const cancelThreadDelete = () => {
+    toggleThreadDeletePasswordPanel(false);
+  }
 
   const addToReplies = reply => {
     setThread(() => {
@@ -144,27 +167,31 @@ const Thread = ({ match }) => {
   const showReplyCards = thread.replies.map(reply => <li key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} setReplyToDelete={setReplyToDelete} /></li>)
 
   return (
-    <main>
-      {addReplyPasswordPanelOpened && <PasswordPanel message='Enter Reply Password' handler={handleReplyPost} close={resetReply} />}
-      {replyToDelete && <PasswordPanel message='Enter Reply Password' handler={handleReplyDelete} close={closeReplyDeletePasswordPanel} />}
-      <div>
-        <h2>{thread.reported ? 'reported': thread.text}</h2>
+    <Fragment>
+      {threadDeleted && <Redirect to='/' />}
+      <main>
+        {addReplyPasswordPanelOpened && <PasswordPanel message='Enter Reply Password' handler={handleReplyPost} close={resetReply} />}
+        {replyToDelete && <PasswordPanel message='Enter Reply Password' handler={handleReplyDelete} close={closeReplyDeletePasswordPanel} />}
+        {threadDeletePasswordPanelOpened && <PasswordPanel message='Enter Thread Password' handler={handleThreadDelete} close={cancelThreadDelete} />}
         <div>
-          <button onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}>report</button>
-          <button><FontAwesomeIcon size='1x' icon='trash-alt' /></button>
-        </div>        
-      </div>
-      <form onSubmit={addReply}>
-        <input type='text' placeholder='reply' value={newReply} onChange={handleReplyChange} />
-        <button>add reply</button>
-      </form>
-      <section>
-        <ul>
-          {showReplyCards}        
-        </ul>
-      </section>
-    </main>
-  );
+          <h2>{thread.reported ? 'reported': thread.text}</h2>
+          <div>
+            <button onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}>report</button>
+            <button onClick={() => toggleThreadDeletePasswordPanel(true)}><FontAwesomeIcon size='1x' icon='trash-alt' /></button>
+          </div>        
+        </div>
+        <form onSubmit={addReply}>
+          <input type='text' placeholder='reply' value={newReply} onChange={handleReplyChange} />
+          <button>add reply</button>
+        </form>
+        <section>
+          <ul>
+            {showReplyCards}        
+          </ul>
+        </section>
+      </main>
+    </Fragment>
+  );  
 };
   
 export default Thread;
