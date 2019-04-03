@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { report } from '../../libs/apiHandler';
 import { reportThread } from '../../libs/commmonActionMethods';
 
 const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
