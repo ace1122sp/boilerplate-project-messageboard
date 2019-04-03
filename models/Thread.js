@@ -11,8 +11,8 @@ const ThreadSchema = new mongoose.Schema({
   },
   text: {
     type: String, 
-    min: THREAD_MIN_LENGTH,
-    max: THREAD_MAX_LENGTH,
+    minlength: THREAD_MIN_LENGTH,
+    maxlength: THREAD_MAX_LENGTH,
     required: true
   },
   created_on: {
@@ -29,8 +29,8 @@ const ThreadSchema = new mongoose.Schema({
   },
   delete_password: {
     type: String,
-    min: PASSWORD_MIN_LENGTH,
-    max: PASSWORD_MAX_LENGTH,
+    minlength: PASSWORD_MIN_LENGTH,
+    maxlength: PASSWORD_MAX_LENGTH,
     required: true
   },
   replies: {

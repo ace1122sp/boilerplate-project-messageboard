@@ -12,8 +12,8 @@ const ReplySchema = new mongoose.Schema({
   },
   text: {
     type: String,
-    min: REPLY_MIN_LENGTH,
-    max: REPLY_MAX_LENGTH,
+    minlength: REPLY_MIN_LENGTH,
+    maxlength: REPLY_MAX_LENGTH,
     required: true
   },
   created_on: {
@@ -26,8 +26,8 @@ const ReplySchema = new mongoose.Schema({
   },
   delete_password: {
     type: String,
-    min: PASSWORD_MIN_LENGTH,   
-    max: PASSWORD_MAX_LENGTH,
+    minlength: PASSWORD_MIN_LENGTH,   
+    maxlength: PASSWORD_MAX_LENGTH,
     required: true
   }
 });
