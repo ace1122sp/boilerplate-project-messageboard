@@ -21,11 +21,24 @@ const Board = () => {
     setInitThreads(threadURL(board));
   }, []);
 
+  const _handleGetResponse = res => {
+    setThreads([...res.threads]);
+    setLoadingStatus('false');
+  };
+
+  const _handleDeleteResponse = res => {
+    if (res === 'success') {
+      console.log('thread deleted');
+      removeFromThreads(data.thread_id);
+    } else {
+      console.log(res);
+    }        
+  };
+
   const setInitThreads = url => {
     get(url)
       .then(res => {
-        setThreads([...res.threads]);
-        setLoadingStatus('false');
+        _handleGetResponse(res);
       })
       .catch(err => {
         console.log(err) // temp solution
@@ -57,12 +70,7 @@ const Board = () => {
     closePasswordPanel(null);
     remove(threadURL(board), data)
       .then(res => {
-        if (res === 'success') {
-          console.log('thread deleted');
-          removeFromThreads(data.thread_id);
-        } else {
-          console.log(res);
-        }        
+        _handleDeleteResponse(res);
       })
       .catch(err => {
         console.error(err); // temp solution for development
@@ -79,7 +87,7 @@ const Board = () => {
         <button onClick={openAddThreadPanel}><FontAwesomeIcon size='1x' icon='plus' />add thread</button>
       </div>
       <section>
-        {threads.length === 0 && <EmptyBoard />}
+        {!threads.length && <EmptyBoard />}
         <ul>
           {showThreadCards}
         </ul>
