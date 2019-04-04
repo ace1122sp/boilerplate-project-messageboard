@@ -3,12 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { get, remove } from '../../libs/apiHandler';
 import { threadURL } from '../../libs/urlHandler';
+import { addThreadPortal, deleteThreadPortal } from '../../libs/portalGenerators';
 
 import BoardContext from '../contexts/BoardContext';
 import ThreadCard from '../helper/ThreadCard';
 import EmptyBoard from '../helper/EmptyBoard';
-import AddThreadPanel from '../helper/AddThreadPanel';
-import PasswordPanel from '../helper/PasswordPanel';
 
 const Board = () => {
   const board = useContext(BoardContext);
@@ -81,8 +80,8 @@ const Board = () => {
 
   return (
     <main>
-      {addThreadPanelOpened && <AddThreadPanel close={closeAddThreadPanel} addToThreads={addToThreads} />}
-      {threadToDelete && <PasswordPanel message='Enter Thread Password' handler={handleThreadDelete} close={closePasswordPanel} />}
+      {addThreadPanelOpened && addThreadPortal(addToThreads, closeAddThreadPanel)}
+      {threadToDelete && deleteThreadPortal('Enter Thread Password', handleThreadDelete, closePasswordPanel)}
       <div>
         <button onClick={openAddThreadPanel}><FontAwesomeIcon size='1x' icon='plus' />add thread</button>
       </div>

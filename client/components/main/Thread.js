@@ -5,10 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { get, post, report, remove } from '../../libs/apiHandler';
 import { reportThread } from '../../libs/commmonActionMethods';
 import { threadURL, replyURL } from '../../libs/urlHandler';
+import { addReplyPortal, deleteReplyPortal, deleteThreadPortal } from '../../libs/portalGenerators';
 
 import BoardContext from '../contexts/BoardContext';
 import ReplyCard from '../helper/ReplyCard';
-import PasswordPanel from '../helper/PasswordPanel';
 
 const Thread = ({ match }) => {
   const board = useContext(BoardContext);
@@ -184,15 +184,15 @@ const Thread = ({ match }) => {
       });
   };
 
-  const showReplyCards = thread.replies.map(reply => <li key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} setReplyToDelete={setReplyToDelete} /></li>)
+  const showReplyCards = thread.replies.map(reply => <li key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} setReplyToDelete={setReplyToDelete} /></li>);
 
   return (
     <Fragment>
       {threadDeleted && <Redirect to='/' />}
       <main>
-        {addReplyPasswordPanelOpened && <PasswordPanel message='Enter Reply Password' handler={handleReplyPost} close={resetReply} />}
-        {replyToDelete && <PasswordPanel message='Enter Reply Password' handler={handleReplyDelete} close={closeReplyDeletePasswordPanel} />}
-        {threadDeletePasswordPanelOpened && <PasswordPanel message='Enter Thread Password' handler={handleThreadDelete} close={cancelThreadDelete} />}
+        {addReplyPasswordPanelOpened && addReplyPortal('Enter Reply Password', handleReplyPost, resetReply, closeReplyDeletePasswordPanel)}
+        {replyToDelete && deleteReplyPortal('Enter Reply Password', handleReplyDelete, closeReplyDeletePasswordPanel)}
+        {threadDeletePasswordPanelOpened && deleteThreadPortal('Enter Thread Password', handleThreadDelete, cancelThreadDelete)}
         <div>
           <h2>{thread.reported ? 'reported': thread.text}</h2>
           <div>
