@@ -54,7 +54,7 @@ const Thread = ({ match }) => {
     }
   };
 
-  const _handleReplyDeleteResponse = res => {
+  const _handleReplyDeleteResponse = (res, data) => {
     if (res === 'success') {
       console.log('reply deleted');
       setThread(() => _markDeletedReply(data.reply_id));
@@ -162,7 +162,7 @@ const Thread = ({ match }) => {
     closeReplyDeletePasswordPanel(null);
     remove(replyURL(board), data)
       .then(res => {
-        _handleReplyDeleteResponse(res);
+        _handleReplyDeleteResponse(res, data);
       })
       .catch(err => {
         console.error(err); // temp solution for development

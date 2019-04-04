@@ -26,7 +26,7 @@ const Board = () => {
     setLoadingStatus('false');
   };
 
-  const _handleDeleteResponse = res => {
+  const _handleDeleteResponse = (res, data) => {
     if (res === 'success') {
       console.log('thread deleted');
       removeFromThreads(data.thread_id);
@@ -70,7 +70,7 @@ const Board = () => {
     closePasswordPanel(null);
     remove(threadURL(board), data)
       .then(res => {
-        _handleDeleteResponse(res);
+        _handleDeleteResponse(res, data);
       })
       .catch(err => {
         console.error(err); // temp solution for development
