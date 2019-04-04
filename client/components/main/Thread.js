@@ -13,8 +13,8 @@ import PasswordPanel from '../helper/PasswordPanel';
 const Thread = ({ match }) => {
   const board = useContext(BoardContext);
   const [thread, setThread] = useState({ replies: [] });
-  const [threadDeleted, markThreadAsDeleted] = useState(false);
-  const [newReply, updateNewReply] = useState('');
+  const [threadDeleted, setThreadAsDeleted] = useState(false);
+  const [newReply, setNewReply] = useState('');
   const [threadDeletePasswordPanelOpened, toggleThreadDeletePasswordPanel] = useState(false);
   const [addReplyPasswordPanelOpened, toggleAddReplyPasswordPanel] = useState(false);
   const [replyToDelete, setReplyToDelete] = useState(null);
@@ -24,13 +24,68 @@ const Thread = ({ match }) => {
     initializeThread(replyURL(board) + `?thread_id=${match.params.thread_id}`);    
   }, []);
 
+  const _handleGetResponse = res => {
+    setThread(() => {
+      return {...res};
+    })
+    setLoadingStatus('false');
+  };
+
+  const _handleThreadDeleteResponse = res => {
+    if (res === 'success') {
+      setThreadAsDeleted(true);
+    } else {
+      console.log(res);
+    }
+  };
+
+  const _handlePostReplyResponse = res => {
+    if (res._id) {
+      console.log('reply added');
+      addToReplies(res);
+    } else {
+      console.log('something went wrong');
+    }
+  };
+
+  const _handlePutReplyResponse = res => {
+    if (res === 'success') {
+      setThread(() => _updateRepliesWithChangedReportedStatus(reply_id));
+    }
+  };
+
+  const _handleReplyDeleteResponse = res => {
+    if (res === 'success') {
+      console.log('reply deleted');
+      setThread(() => _markDeletedReply(data.reply_id));
+    } else {
+      console.log(res);
+    }
+  };
+
+  const _markDeletedReply = reply_id => {
+    const updatedReplies = thread.replies.map(reply => {
+      if (reply._id === reply_id) return { ...reply, text: '[deleted]' };
+      return reply;
+    });
+    return { ...thread, replies: updatedReplies };
+  };
+  
+  const _updateRepliesWithChangedReportedStatus = reply_id => {    
+    const updatedReplies = thread.replies.map(reply => {
+      
+      // find the newly reported reply and check if it has not been deleted before you can update 'reported' field
+      if (reply._id === reply_id && reply.text !== '[deleted]') return { ...reply, reported: true };
+      return reply;
+    });
+
+    return { ...thread, replies: updatedReplies };
+  };
+
   const initializeThread = url => {
     get(url)
       .then(res => {
-        setThread(() => {
-          return {...res};
-        })
-        setLoadingStatus('false');
+        _handleGetResponse(res);
       })
       .catch(err => {
         console.error(err); // temp solution
@@ -48,11 +103,7 @@ const Thread = ({ match }) => {
     toggleThreadDeletePasswordPanel(false);
     remove(threadURL(board), data)
       .then(res => {
-        if (res === 'success') {
-          markThreadAsDeleted(true);
-        } else {
-          console.log(res);
-        }
+        _handleThreadDeleteResponse(res);
       })
       .catch(err => {
         console.error(err); // temp solution for development
@@ -78,12 +129,7 @@ const Thread = ({ match }) => {
     resetReply();
     post(replyURL(board), data)
       .then(res => {
-        if (res._id) {
-          console.log('reply added');
-          addToReplies(res);
-        } else {
-          console.log('something went wrong');
-        }
+        _handlePostReplyResponse(res);
       })
       .catch(error => {
         console.error(err); // temp solution for development
@@ -96,7 +142,7 @@ const Thread = ({ match }) => {
   };
 
   const handleReplyChange = e => {
-    updateNewReply(e.target.value);
+    setNewReply(e.target.value);
   };
 
   const closeAddReplyPasswordPanel = () => {
@@ -107,14 +153,6 @@ const Thread = ({ match }) => {
     setReplyToDelete(null);
   };
 
-  const _markDeletedReply = reply_id => {
-    const updatedReplies = thread.replies.map(reply => {
-      if (reply._id === reply_id) return { ...reply, text: '[deleted]' };
-      return reply;
-    });
-    return { ...thread, replies: updatedReplies };
-  }
-
   const handleReplyDelete = delete_password => {
     const data = {
       thread_id: thread._id,
@@ -124,12 +162,7 @@ const Thread = ({ match }) => {
     closeReplyDeletePasswordPanel(null);
     remove(replyURL(board), data)
       .then(res => {
-        if (res === 'success') {
-          console.log('reply deleted');
-          setThread(() => _markDeletedReply(data.reply_id));
-        } else {
-          console.log(res);
-        }
+        _handleReplyDeleteResponse(res);
       })
       .catch(err => {
         console.error(err); // temp solution for development
@@ -138,26 +171,13 @@ const Thread = ({ match }) => {
 
   const resetReply = () => {
     closeAddReplyPasswordPanel();
-    updateNewReply('');
-  };
-
-  const _updateRepliesWithChangedReportedStatus = reply_id => {    
-    const updatedReplies = thread.replies.map(reply => {
-      
-      // find the newly reported reply and check if it has not been deleted before you can update 'reported' field
-      if (reply._id === reply_id && reply.text !== '[deleted]') return { ...reply, reported: true };
-      return reply;
-    });
-
-    return { ...thread, replies: updatedReplies };
+    setNewReply('');
   };
 
   const reportReply = (thread_id, reply_id) => {
     report(replyURL(board), { thread_id, reply_id })
       .then(res => {
-        if (res === 'success') {
-          setThread(() => _updateRepliesWithChangedReportedStatus(reply_id));
-        }
+        _handlePutReplyResponse(res);
       })
       .catch(err => {
         console.error(err); // temp solution for development

@@ -5,16 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { reportThread } from '../../libs/commmonActionMethods';
 
 const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
-  const replies = thread.replies.map(reply => <li key={reply._id}>{thread.reported ? '*****' : reply.text}</li>);
-  const [text, updateThreadText] = useState(() => thread.reported ? 'reported' : <Link to={`/b/general/${thread._id}`}>{thread.text}</Link>);
+  const [text, setThreadText] = useState(() => thread.reported ? 'reported' : <Link to={`/b/general/${thread._id}`}>{thread.text}</Link>);
 
   const markReportedThread = () => {
-    updateThreadText('reported');
+    setThreadText('reported');
   };
 
   const deleteThread = () => {
     setThreadToDelete(thread._id);
   };
+
+  const replies = thread.replies.map(reply => <li key={reply._id}>{thread.reported ? '*****' : reply.text}</li>);
 
   return (
     <div>
@@ -37,6 +38,6 @@ const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
       </section>
     </div>
   );
-}
+};
   
 export default ThreadCard;
