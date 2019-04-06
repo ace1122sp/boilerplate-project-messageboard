@@ -48,7 +48,7 @@ const Thread = ({ match }) => {
     }
   };
 
-  const _handlePutReplyResponse = res => {
+  const _handlePutReplyResponse = (res, reply_id) => {
     if (res === 'success') {
       setThread(() => _updateRepliesWithChangedReportedStatus(reply_id));
     }
@@ -177,7 +177,7 @@ const Thread = ({ match }) => {
   const reportReply = (thread_id, reply_id) => {
     report(replyURL(board), { thread_id, reply_id })
       .then(res => {
-        _handlePutReplyResponse(res);
+        _handlePutReplyResponse(res, reply_id);
       })
       .catch(err => {
         console.error(err); // temp solution for development
