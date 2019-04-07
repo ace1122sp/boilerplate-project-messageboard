@@ -184,28 +184,34 @@ const Thread = ({ match }) => {
       });
   };
 
-  const showReplyCards = thread.replies.map(reply => <li key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} setReplyToDelete={setReplyToDelete} /></li>);
+  const showReplyCards = thread.replies.map(reply => <li className='collection-item card' key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} setReplyToDelete={setReplyToDelete} /></li>);
 
   return (
     <Fragment>
       {threadDeleted && <Redirect to='/' />}
-      <main>
+      <main className='container'>
         {addReplyPasswordPanelOpened && addReplyPortal('Enter Reply Password', handleReplyPost, resetReply, closeReplyDeletePasswordPanel)}
         {replyToDelete && deleteReplyPortal('Enter Reply Password', handleReplyDelete, closeReplyDeletePasswordPanel)}
         {threadDeletePasswordPanelOpened && deleteThreadPortal('Enter Thread Password', handleThreadDelete, cancelThreadDelete)}
-        <div>
-          <h2>{thread.reported ? 'reported': thread.text}</h2>
-          <div>
-            <button onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}>report</button>
-            <button onClick={() => toggleThreadDeletePasswordPanel(true)}><FontAwesomeIcon size='1x' icon='trash-alt' /></button>
-          </div>        
+        <div className='row valign-wrapper'>
+          <h2 className='truncate col s10'>{thread.reported ? 'reported': thread.text}
+          <button className='btn-flat btn-large col s1 right' onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}><i className='material-icons'>report</i></button>
+          <button className='btn-flat btn-large col s1 right' onClick={() => toggleThreadDeletePasswordPanel(true)}><i className='material-icons'>delete</i></button>          
+          </h2>
         </div>
-        <form onSubmit={addReply}>
-          <input type='text' placeholder='reply' value={newReply} onChange={handleReplyChange} />
-          <button>add reply</button>
+        <form className='col s12 m8 l6' onSubmit={addReply}>
+          <div className='row'>
+            <div className='input-field col s12'>
+              <input type='text' id='reply-input' value={newReply} onChange={handleReplyChange} required />
+              <label for='reply-input'>reply</label>        
+            </div>
+          </div>
+          <div className='row'>
+            <button className='btn-flat btn-small'>add reply</button>
+          </div>
         </form>
         <section>
-          <ul>
+          <ul className='collection'>
             {showReplyCards}        
           </ul>
         </section>

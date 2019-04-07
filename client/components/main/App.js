@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
@@ -12,15 +12,25 @@ import NotFound from './NotFound';
 
 library.add(fab, faAngleDown, faPlus, faTrashAlt, faEyeSlash, faHouseDamage, faFolder);
 
-const App = () => 
-  <Fragment>
-    <Header />
-    <Switch>
-      <Route exact path='/' component={Board} />
-      <Route path='/b/:board/:thread_id' render={props => <Thread {...props} />} />
-      <Route path='/' component={NotFound} />
-    </Switch>
-    <Footer />
-  </Fragment>
+import '../../css/App.scss';
+import M from "materialize-css";
 
+const App = () => {
+  useEffect(() => {
+    M.AutoInit();
+  }, []);
+
+  return (
+    <Fragment>
+      <Header />
+      <Switch>
+        <Route exact path='/' component={Board} />
+        <Route path='/b/:board/:thread_id' render={props => <Thread {...props} />} />
+        <Route path='/' component={NotFound} />
+      </Switch>
+      <Footer />
+    </Fragment>
+  ); 
+}
+  
 export default App;

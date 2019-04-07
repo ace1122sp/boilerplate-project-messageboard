@@ -43,15 +43,29 @@ const AddThreadPanel = ({ close, addToThreads }) => {
   };
 
   return (
-    <div>
-      <button onClick={close}>x</button>
+    <div className='container'>
+      <button className='btn' onClick={close}>
+        <i className='material-icons'>close</i>
+      </button>
       {(notification && <Notification notification={notification} />) ||
       <form onSubmit={addThread}>
-        <label>New Thread</label>
-        <input type='text' placeholder='thread' value={thread} onChange={handleThreadChange} />
-        <label>password</label>
-        <input type='password' placeholder='password' value={delete_password} onChange={handlePasswordChange} /> 
-        <button>submit</button>
+        <div className='row'>
+          <div className='input-field col offset-s3 s6'>
+            <input type='text' id='thread-input' value={thread} onChange={handleThreadChange} />
+            <label for='thread-input'>new thread</label>
+          </div>
+        </div>
+        <div className='row'>
+          <div className='input-field col offset-s3 s6'>
+            <input type='password' id='password-input' value={delete_password} onChange={handlePasswordChange} /> 
+            <label for='password-input'>password</label>
+          </div>
+        </div>
+        <div className='row'>
+          <button className='btn col offset-s10'>submit
+            <i className='material-icons'>send</i>
+          </button>
+        </div>
       </form>}
     </div>
   );

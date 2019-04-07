@@ -1,0 +1,13 @@
+.space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;  
+  padding-top: 80px;
+  padding-bottom: 130px;
+  justify-content: flex-start;
+}

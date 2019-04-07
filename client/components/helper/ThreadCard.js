@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { reportThread } from '../../libs/commmonActionMethods';
 
@@ -18,25 +17,27 @@ const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
   const replies = thread.replies.map(reply => <li key={reply._id}>{thread.reported ? '*****' : reply.text}</li>);
 
   return (
-    <div>
-      <div>
-        <h3>{text}</h3>
-        <div>
-          <button onClick={() => reportThread(apiUrl, { thread_id: thread._id }, markReportedThread)}>report</button>
-          <button><FontAwesomeIcon size='1x' icon='angle-down' /></button>
-          <button onClick={deleteThread}>x</button>
-        </div>
+    <li >
+      <div className='collapsible-header valign-wrapper space-between'>
+        <span className='truncate'>{text}</span>        
+        <i className='material-icons right'>keyboard_arrow_down</i>
       </div>
-      <section>
-        <ul>
-          {replies}
-        </ul>      
-        <aside>
-          <h4>{replies.length} {replies.length === 1 ? 'reply' : 'replies'}</h4>
-          <p>bumped on: {thread.bumped_on}</p>
-        </aside>
-      </section>
-    </div>
+      <div className='collapsible-body'>
+        <div className='row'>
+          <ul>
+            {replies}
+          </ul>      
+          <aside>
+            <span>{replies.length} {replies.length === 1 ? 'reply' : 'replies'}</span>
+            <p>bumped on: {thread.bumped_on}</p>
+          </aside>
+        </div>
+        <div className='row right-align'>
+          <button className='btn-flat waves-effect waves-teal' onClick={() => reportThread(apiUrl, { thread_id: thread._id }, markReportedThread)}><i className='material-icons'>report</i></button>
+          <button className='btn-flat waves-effect waves-teal' onClick={deleteThread}><i className='material-icons'>delete</i></button>        
+        </div>        
+      </div>
+    </li>              
   );
 };
   

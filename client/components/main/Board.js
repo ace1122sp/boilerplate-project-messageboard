@@ -79,15 +79,15 @@ const Board = () => {
   const showThreadCards = threads.map(thread => <ThreadCard key={thread._id} thread={thread} apiUrl={threadURL(board)} setThreadToDelete={setThreadToDelete} />);
 
   return (
-    <main>
+    <main className='container main'>
       {addThreadPanelOpened && addThreadPortal(addToThreads, closeAddThreadPanel)}
       {threadToDelete && deleteThreadPortal('Enter Thread Password', handleThreadDelete, closePasswordPanel)}
-      <div>
-        <button onClick={openAddThreadPanel}><FontAwesomeIcon size='1x' icon='plus' />add thread</button>
+      <div className='fixed-action-btn'>
+        <button className='btn-floating btn-large pulse waves-effect waves-circle waves-white' onClick={openAddThreadPanel}><i className='material-icons'>add</i></button>
       </div>
       <section>
         {!threads.length && <EmptyBoard />}
-        <ul>
+        <ul className='collapsible'>
           {showThreadCards}
         </ul>
       </section>

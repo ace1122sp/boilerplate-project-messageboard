@@ -24,12 +24,12 @@ dbConnect(config.db.mongoURI);
 app.use(cors({origin: '*'})); //For FCC testing purposes only
 app.use(helmet());
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
-app.use((req, res, next) => {
-  res.set({
-    'Content-Security-Policy': "default-src 'self' 'unsafe-eval' 'unsafe-inline'; img-src 'self'; base-uri 'none'"
-  });
-  next();
-});
+// app.use((req, res, next) => {
+//   res.set({
+//     'Content-Security-Policy': "default-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src https://fonts.googleapis.com/icon?family=Material+Icons; img-src 'self'; base-uri 'none'"
+//   });
+//   next();
+// });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
