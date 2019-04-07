@@ -1,3 +1,9 @@
+@import 'custom-variables';
+
+.mark {
+  background: teal;
+}
+
 .space-between {
   display: flex;
   flex-direction: row;
@@ -7,7 +13,19 @@
 .main {
   display: flex;
   flex-direction: column;  
-  padding-top: 80px;
-  padding-bottom: 130px;
+  padding-top: $space-xl;
+  padding-bottom: $space-jumbo;
   justify-content: flex-start;
+  min-height: 100vh;
+}
+
+.center-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: auto;
+}
+
+.padding {
+  padding: $space;
 }

@@ -15,7 +15,7 @@ const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
   };
 
   const replies = thread.replies.map(reply => <li key={reply._id}>{thread.reported ? '*****' : reply.text}</li>);
-
+  
   return (
     <li >
       <div className='collapsible-header valign-wrapper space-between'>
