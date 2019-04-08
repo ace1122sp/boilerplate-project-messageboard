@@ -61,6 +61,7 @@ const AddThreadPanel = ({ close, addToThreads }) => {
               <div className='input-field col offset-s3 s6'>
                 <input type='password' id='password-input' value={delete_password} onChange={handlePasswordChange} /> 
                 <label htmlFor='password-input'>password</label>
+                <span className='helper-text'>password must be at least 5 characters long</span>
               </div>
             </div>
             <div className='row'>

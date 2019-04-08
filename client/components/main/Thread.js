@@ -34,17 +34,18 @@ const Thread = ({ match }) => {
   const _handleThreadDeleteResponse = res => {
     if (res === 'success') {
       setThreadAsDeleted(true);
+      return 'thread deleted';
     } else {
-      console.log(res);
+      return res;
     }
   };
 
   const _handlePostReplyResponse = res => {
     if (res._id) {
-      console.log('reply added');
       addToReplies(res);
+      return 'reply created';
     } else {
-      console.log('something went wrong');
+      return 'something went wrong';
     }
   };
 
@@ -56,10 +57,10 @@ const Thread = ({ match }) => {
 
   const _handleReplyDeleteResponse = (res, data) => {
     if (res === 'success') {
-      console.log('reply deleted');
       setThread(() => _markDeletedReply(data.reply_id));
+      return 'reply deleted';
     } else {
-      console.log(res);
+      return res;
     }
   };
 
@@ -100,11 +101,9 @@ const Thread = ({ match }) => {
 
   const handleThreadDelete = delete_password => {
     const data = { thread_id: thread._id, delete_password };
-    toggleThreadDeletePasswordPanel(false);
-    remove(threadURL(board), data)
-      .then(res => {
-        _handleThreadDeleteResponse(res);
-      })
+    // toggleThreadDeletePasswordPanel(false);
+    return remove(threadURL(board), data)
+      .then(res => _handleThreadDeleteResponse(res))
       .catch(err => {
         console.error(err); // temp solution for development
       });
@@ -126,10 +125,9 @@ const Thread = ({ match }) => {
       text: newReply,
       delete_password
     };
-    resetReply();
-    post(replyURL(board), data)
+    return post(replyURL(board), data)
       .then(res => {
-        _handlePostReplyResponse(res);
+        return _handlePostReplyResponse(res);        
       })
       .catch(error => {
         console.error(err); // temp solution for development
@@ -159,11 +157,8 @@ const Thread = ({ match }) => {
       reply_id: replyToDelete,
       delete_password
     };
-    closeReplyDeletePasswordPanel(null);
-    remove(replyURL(board), data)
-      .then(res => {
-        _handleReplyDeleteResponse(res, data);
-      })
+    return remove(replyURL(board), data)
+      .then(res => _handleReplyDeleteResponse(res, data))
       .catch(err => {
         console.error(err); // temp solution for development
       });
@@ -188,7 +183,7 @@ const Thread = ({ match }) => {
 
   return (
     <Fragment>
-      {threadDeleted && <Redirect to='/' />}
+      {(threadDeleted && !threadDeletePasswordPanelOpened) && <Redirect to='/' />}
       <main className='container'>
         {addReplyPasswordPanelOpened && addReplyPortal('Enter Reply Password', handleReplyPost, resetReply, closeReplyDeletePasswordPanel)}
         {replyToDelete && deleteReplyPortal('Enter Reply Password', handleReplyDelete, closeReplyDeletePasswordPanel)}

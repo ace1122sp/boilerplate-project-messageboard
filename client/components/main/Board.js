@@ -25,12 +25,7 @@ const Board = () => {
   };
 
   const _handleDeleteResponse = (res, data) => {
-    if (res === 'success') {
-      console.log('thread deleted');
-      removeFromThreads(data.thread_id);
-    } else {
-      console.log(res);
-    }        
+    if (res === 'success') removeFromThreads(data.thread_id);
   };
 
   const setInitThreads = url => {
@@ -65,10 +60,10 @@ const Board = () => {
 
   const handleThreadDelete = password => {
     const data = { thread_id: threadToDelete, delete_password: password };
-    closePasswordPanel(null);
-    remove(threadURL(board), data)
+    return remove(threadURL(board), data)
       .then(res => {
         _handleDeleteResponse(res, data);
+        return res;
       })
       .catch(err => {
         console.error(err); // temp solution for development
