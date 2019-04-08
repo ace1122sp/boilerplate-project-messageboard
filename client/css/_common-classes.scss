@@ -1,8 +1,5 @@
+@import './components/variables';
 @import 'custom-variables';
-
-.mark {
-  background: teal;
-}
 
 .space-between {
   display: flex;
@@ -28,4 +25,9 @@
 
 .padding {
   padding: $space;
+}
+
+.footer-wrap {
+  display: flex;
+  flex-direction: column;
 }

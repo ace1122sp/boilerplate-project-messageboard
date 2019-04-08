@@ -1,8 +1,4 @@
 @import 'materialize';
 @import 'custom-variables';
 @import 'common-classes';
-
-.footer-wrap {
-  display: flex;
-  flex-direction: column;
-}
+@import 'portals';

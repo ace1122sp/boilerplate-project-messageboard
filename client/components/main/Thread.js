@@ -203,7 +203,7 @@ const Thread = ({ match }) => {
           <div className='row'>
             <div className='input-field col s12'>
               <input type='text' id='reply-input' value={newReply} onChange={handleReplyChange} required />
-              <label for='reply-input'>reply</label>        
+              <label htmlFor='reply-input'>reply</label>        
             </div>
           </div>
           <div className='row'>

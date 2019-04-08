@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { get, remove } from '../../libs/apiHandler';
 import { threadURL } from '../../libs/urlHandler';

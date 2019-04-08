@@ -5,7 +5,7 @@ import { threadURL } from '../../libs/urlHandler';
 
 import BoardContext from '../contexts/BoardContext';
 
-import Notification from './_addThreadPanel/Notification';
+import Notification from './Notification';
 
 const AddThreadPanel = ({ close, addToThreads }) => {
   const board = useContext(BoardContext);
@@ -43,30 +43,34 @@ const AddThreadPanel = ({ close, addToThreads }) => {
   };
 
   return (
-    <div className='container'>
-      <button className='btn' onClick={close}>
-        <i className='material-icons'>close</i>
-      </button>
-      {(notification && <Notification notification={notification} />) ||
-      <form onSubmit={addThread}>
-        <div className='row'>
-          <div className='input-field col offset-s3 s6'>
-            <input type='text' id='thread-input' value={thread} onChange={handleThreadChange} />
-            <label for='thread-input'>new thread</label>
-          </div>
-        </div>
-        <div className='row'>
-          <div className='input-field col offset-s3 s6'>
-            <input type='password' id='password-input' value={delete_password} onChange={handlePasswordChange} /> 
-            <label for='password-input'>password</label>
-          </div>
-        </div>
-        <div className='row'>
-          <button className='btn col offset-s10'>submit
-            <i className='material-icons'>send</i>
+    <div className='portal-overlay'>
+      <div className='portal'>    
+        <div className='portal-content'>
+          <button className='btn' onClick={close}>
+            <i className='material-icons'>close</i>
           </button>
+          {(notification && <Notification notification={notification} />) ||
+          <form onSubmit={addThread}>
+            <div className='row'>
+              <div className='input-field col offset-s3 s6'>
+                <input type='text' id='thread-input' value={thread} onChange={handleThreadChange} />
+                <label htmlFor='thread-input'>new thread</label>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='input-field col offset-s3 s6'>
+                <input type='password' id='password-input' value={delete_password} onChange={handlePasswordChange} /> 
+                <label htmlFor='password-input'>password</label>
+              </div>
+            </div>
+            <div className='row'>
+              <button className='btn col offset-s10'>submit
+                <i className='material-icons'>send</i>
+              </button>
+            </div>
+          </form>}
         </div>
-      </form>}
+      </div>
     </div>
   );
 }
