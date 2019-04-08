@@ -8,6 +8,8 @@ import BoardContext from '../contexts/BoardContext';
 import ThreadCard from '../helper/ThreadCard';
 import EmptyBoard from '../helper/EmptyBoard';
 
+import M from "materialize-css";
+
 const Board = () => {
   const board = useContext(BoardContext);
   const [threads, setThreads] = useState([]);
@@ -17,6 +19,9 @@ const Board = () => {
 
   useEffect(() => {
     setInitThreads(threadURL(board));
+    const options = {};
+    const elems = document.querySelectorAll('.collapsible');
+    const instances = M.Collapsible.init(elems, options);
   }, []);
 
   const _handleGetResponse = res => {
