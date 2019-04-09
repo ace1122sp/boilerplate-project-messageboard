@@ -53,13 +53,13 @@ const AddThreadPanel = ({ close, addToThreads }) => {
           <form onSubmit={addThread}>
             <div className='row'>
               <div className='input-field col offset-s3 s6'>
-                <input type='text' id='thread-input' value={thread} onChange={handleThreadChange} />
+                <input type='text' id='thread-input' value={thread} onChange={handleThreadChange} required />
                 <label htmlFor='thread-input'>new thread</label>
               </div>
             </div>
             <div className='row'>
               <div className='input-field col offset-s3 s6'>
-                <input type='password' id='password-input' value={delete_password} onChange={handlePasswordChange} /> 
+                <input type='password' id='password-input' value={delete_password} onChange={handlePasswordChange} required /> 
                 <label htmlFor='password-input'>password</label>
                 <span className='helper-text'>password must be at least 5 characters long</span>
               </div>

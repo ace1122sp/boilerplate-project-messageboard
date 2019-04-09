@@ -1,0 +1,49 @@
+@import './components/variables';
+
+.primary-color-text {
+  color: $primary-color;
+}
+
+.primary-color-l-text {
+  color: $primary-color-light;
+}
+
+.primary-color-d-text {
+  color: $primary-color-dark;
+}
+
+.secondary-color-text {
+  color: $secondary-color;
+}
+
+.secondary-color-bg {
+  background: $secondary-color;
+}
+
+.secondary-color-l-bg {
+  background: lighten($secondary-color, 15%);
+}
+
+.secondary-color-pale-text {
+  color: transparentize($secondary-color, .5);
+}
+
+.secondary-color-pale-bg {
+  background: transparentize($secondary-color, .5);
+}
+
+.disabled-color-text {
+  color: $button-disabled-color;
+}
+
+.danger-text {
+  color: $error-color;
+}
+
+.github-bg {
+  background: #24292e;
+}
+
+.linkedin-bg {
+  background: #0077B5
+}

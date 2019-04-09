@@ -189,13 +189,14 @@ const Thread = ({ match }) => {
         {threadDeletePasswordPanelOpened && deleteThreadPortal('Enter Thread Password', handleThreadDelete, cancelThreadDelete)}
         <section className='secondary-color-bg white-text padding'>
           <h5 className=''>{thread.reported ? 'reported': thread.text}</h5>
-            <div className=''>
-              <span className='primary-color-l-text'>{thread.created_on}</span>
-              <div className='right'>
-                <button className='btn-flat btn-large col s1' onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}><i className='material-icons white-text'>report</i></button>
-                <button className='btn-flat btn-large col s1' onClick={() => toggleThreadDeletePasswordPanel(true)}><i className='material-icons danger-text'>delete</i></button>                    
-              </div>
+          <hr className='hr-custom' />
+          <div>
+            <span className='primary-color-l-text'>{thread.created_on}</span>
+            <div className='right'>
+              <button className='btn-flat btn-large col s1' onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}><i className='material-icons white-text'>report</i></button>
+              <button className='btn-flat btn-large col s1' onClick={() => toggleThreadDeletePasswordPanel(true)}><i className='material-icons danger-text'>delete</i></button>                    
             </div>
+          </div>
         </section>        
         <form className='col s12 m8 l6' onSubmit={addReply}>
           <div className='row valign-wrapper'>
