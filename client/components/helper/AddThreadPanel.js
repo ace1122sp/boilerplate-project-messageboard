@@ -65,8 +65,9 @@ const AddThreadPanel = ({ close, addToThreads }) => {
               </div>
             </div>
             <div className='row'>
-              <button className='btn col offset-s10'>submit
-                <i className='material-icons'>send</i>
+              <button className='btn col btn offset-s10'>
+                <span className='col s8 center'>submit</span>
+                <i className='col s4 material-icons'>send</i>
               </button>
             </div>
           </form>}
