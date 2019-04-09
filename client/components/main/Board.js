@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { get, remove } from '../../libs/apiHandler';
 import { threadURL } from '../../libs/urlHandler';
@@ -8,6 +7,9 @@ import { addThreadPortal, deleteThreadPortal } from '../../libs/portalGenerators
 import BoardContext from '../contexts/BoardContext';
 import ThreadCard from '../helper/ThreadCard';
 import EmptyBoard from '../helper/EmptyBoard';
+import Loading from '../helper/Loading';
+
+import M from "materialize-css";
 
 const Board = () => {
   const board = useContext(BoardContext);
@@ -17,21 +19,22 @@ const Board = () => {
   const [loading, setLoadingStatus] = useState(true);
 
   useEffect(() => {
-    setInitThreads(threadURL(board));
+    setInitThreads(threadURL(board));    
   }, []);
+
+  useEffect(() => {
+    const options = {};
+    const elems = document.querySelectorAll('.collapsible');
+    const instances = M.Collapsible.init(elems, options);
+  });
 
   const _handleGetResponse = res => {
     setThreads([...res.threads]);
-    setLoadingStatus('false');
+    setLoadingStatus(false);
   };
 
   const _handleDeleteResponse = (res, data) => {
-    if (res === 'success') {
-      console.log('thread deleted');
-      removeFromThreads(data.thread_id);
-    } else {
-      console.log(res);
-    }        
+    if (res === 'success') removeFromThreads(data.thread_id);
   };
 
   const setInitThreads = url => {
@@ -66,10 +69,10 @@ const Board = () => {
 
   const handleThreadDelete = password => {
     const data = { thread_id: threadToDelete, delete_password: password };
-    closePasswordPanel(null);
-    remove(threadURL(board), data)
+    return remove(threadURL(board), data)
       .then(res => {
         _handleDeleteResponse(res, data);
+        return res;
       })
       .catch(err => {
         console.error(err); // temp solution for development
@@ -79,10 +82,12 @@ const Board = () => {
   const showThreadCards = threads.map(thread => <ThreadCard key={thread._id} thread={thread} apiUrl={threadURL(board)} setThreadToDelete={setThreadToDelete} />);
 
   return (
-    <main className='container main'>
+    <main className='container main main-padding'>
       {addThreadPanelOpened && addThreadPortal(addToThreads, closeAddThreadPanel)}
       {threadToDelete && deleteThreadPortal('Enter Thread Password', handleThreadDelete, closePasswordPanel)}
-      <div className='fixed-action-btn'>
+      {(loading && <Loading />) || 
+      <div>
+        <div className='fixed-action-btn'>
         <button className='btn-floating btn-large pulse waves-effect waves-circle waves-white' onClick={openAddThreadPanel}><i className='material-icons'>add</i></button>
       </div>
       <section>
@@ -91,6 +96,7 @@ const Board = () => {
           {showThreadCards}
         </ul>
       </section>
+      </div>}
     </main>
   );
 }

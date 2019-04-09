@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { get, post, report, remove } from '../../libs/apiHandler';
 import { reportThread } from '../../libs/commmonActionMethods';
@@ -9,6 +8,7 @@ import { addReplyPortal, deleteReplyPortal, deleteThreadPortal } from '../../lib
 
 import BoardContext from '../contexts/BoardContext';
 import ReplyCard from '../helper/ReplyCard';
+import Loading from '../helper/Loading';
 
 const Thread = ({ match }) => {
   const board = useContext(BoardContext);
@@ -28,23 +28,24 @@ const Thread = ({ match }) => {
     setThread(() => {
       return {...res};
     })
-    setLoadingStatus('false');
+    setLoadingStatus(false);
   };
 
   const _handleThreadDeleteResponse = res => {
     if (res === 'success') {
       setThreadAsDeleted(true);
+      return 'thread deleted';
     } else {
-      console.log(res);
+      return res;
     }
   };
 
   const _handlePostReplyResponse = res => {
     if (res._id) {
-      console.log('reply added');
       addToReplies(res);
+      return 'reply created';
     } else {
-      console.log('something went wrong');
+      return 'something went wrong';
     }
   };
 
@@ -56,10 +57,10 @@ const Thread = ({ match }) => {
 
   const _handleReplyDeleteResponse = (res, data) => {
     if (res === 'success') {
-      console.log('reply deleted');
       setThread(() => _markDeletedReply(data.reply_id));
+      return 'reply deleted';
     } else {
-      console.log(res);
+      return res;
     }
   };
 
@@ -100,11 +101,8 @@ const Thread = ({ match }) => {
 
   const handleThreadDelete = delete_password => {
     const data = { thread_id: thread._id, delete_password };
-    toggleThreadDeletePasswordPanel(false);
-    remove(threadURL(board), data)
-      .then(res => {
-        _handleThreadDeleteResponse(res);
-      })
+    return remove(threadURL(board), data)
+      .then(res => _handleThreadDeleteResponse(res))
       .catch(err => {
         console.error(err); // temp solution for development
       });
@@ -126,10 +124,9 @@ const Thread = ({ match }) => {
       text: newReply,
       delete_password
     };
-    resetReply();
-    post(replyURL(board), data)
+    return post(replyURL(board), data)
       .then(res => {
-        _handlePostReplyResponse(res);
+        return _handlePostReplyResponse(res);        
       })
       .catch(error => {
         console.error(err); // temp solution for development
@@ -159,11 +156,8 @@ const Thread = ({ match }) => {
       reply_id: replyToDelete,
       delete_password
     };
-    closeReplyDeletePasswordPanel(null);
-    remove(replyURL(board), data)
-      .then(res => {
-        _handleReplyDeleteResponse(res, data);
-      })
+    return remove(replyURL(board), data)
+      .then(res => _handleReplyDeleteResponse(res, data))
       .catch(err => {
         console.error(err); // temp solution for development
       });
@@ -188,36 +182,42 @@ const Thread = ({ match }) => {
 
   return (
     <Fragment>
-      {threadDeleted && <Redirect to='/' />}
-      <main className='container'>
+      {(threadDeleted && !threadDeletePasswordPanelOpened) && <Redirect to='/' />}
+      <main className='container main main-padding'>
         {addReplyPasswordPanelOpened && addReplyPortal('Enter Reply Password', handleReplyPost, resetReply, closeReplyDeletePasswordPanel)}
         {replyToDelete && deleteReplyPortal('Enter Reply Password', handleReplyDelete, closeReplyDeletePasswordPanel)}
         {threadDeletePasswordPanelOpened && deleteThreadPortal('Enter Thread Password', handleThreadDelete, cancelThreadDelete)}
-        <div className='row valign-wrapper'>
-          <h2 className='truncate col s10'>{thread.reported ? 'reported': thread.text}
-          <button className='btn-flat btn-large col s1 right' onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}><i className='material-icons'>report</i></button>
-          <button className='btn-flat btn-large col s1 right' onClick={() => toggleThreadDeletePasswordPanel(true)}><i className='material-icons'>delete</i></button>          
-          </h2>
-        </div>
-        <form className='col s12 m8 l6' onSubmit={addReply}>
-          <div className='row'>
-            <div className='input-field col s12'>
-              <input type='text' id='reply-input' value={newReply} onChange={handleReplyChange} required />
-              <label for='reply-input'>reply</label>        
+        {(loading && <Loading />) || 
+        <Fragment><section className='secondary-color-bg white-text padding'>
+          <h5 className=''>{thread.reported ? 'reported': thread.text}</h5>
+          <hr className='hr-custom' />
+          <div>
+            <span className='primary-color-l-text'>{thread.created_on}</span>
+            <div className='right'>
+              <button className='btn-flat btn-large col s1' onClick={() => reportThread(threadURL(board), { thread_id: thread._id }, markReportedThread)}><i className='material-icons white-text'>report</i></button>
+              <button className='btn-flat btn-large col s1' onClick={() => toggleThreadDeletePasswordPanel(true)}><i className='material-icons danger-text'>delete</i></button>                    
             </div>
           </div>
-          <div className='row'>
-            <button className='btn-flat btn-small'>add reply</button>
+        </section>
+        <form className='col s12 m8 l6' onSubmit={addReply}>
+          <div className='row valign-wrapper'>
+            <div className='input-field col s10'>
+              <input type='text' id='reply-input' value={newReply} onChange={handleReplyChange} required />
+              <label htmlFor='reply-input'>reply</label>        
+            </div>
+            <div className='col s2'>
+              <button className='btn-flat btn-large'><i className='material-icons secondary-color-text'>reply</i></button>
+            </div>
           </div>
         </form>
         <section>
           <ul className='collection'>
             {showReplyCards}        
           </ul>
-        </section>
+        </section></Fragment>}
       </main>
     </Fragment>
   );  
-};
+}
   
 export default Thread;
