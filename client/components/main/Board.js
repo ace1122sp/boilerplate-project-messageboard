@@ -7,6 +7,7 @@ import { addThreadPortal, deleteThreadPortal } from '../../libs/portalGenerators
 import BoardContext from '../contexts/BoardContext';
 import ThreadCard from '../helper/ThreadCard';
 import EmptyBoard from '../helper/EmptyBoard';
+import Loading from '../helper/Loading';
 
 import M from "materialize-css";
 
@@ -18,15 +19,18 @@ const Board = () => {
   const [loading, setLoadingStatus] = useState(true);
 
   useEffect(() => {
-    setInitThreads(threadURL(board));
+    setInitThreads(threadURL(board));    
+  }, []);
+
+  useEffect(() => {
     const options = {};
     const elems = document.querySelectorAll('.collapsible');
     const instances = M.Collapsible.init(elems, options);
-  }, []);
+  });
 
   const _handleGetResponse = res => {
     setThreads([...res.threads]);
-    setLoadingStatus('false');
+    setLoadingStatus(false);
   };
 
   const _handleDeleteResponse = (res, data) => {
@@ -81,7 +85,9 @@ const Board = () => {
     <main className='container main main-padding'>
       {addThreadPanelOpened && addThreadPortal(addToThreads, closeAddThreadPanel)}
       {threadToDelete && deleteThreadPortal('Enter Thread Password', handleThreadDelete, closePasswordPanel)}
-      <div className='fixed-action-btn'>
+      {(loading && <Loading />) || 
+      <div>
+        <div className='fixed-action-btn'>
         <button className='btn-floating btn-large pulse waves-effect waves-circle waves-white' onClick={openAddThreadPanel}><i className='material-icons'>add</i></button>
       </div>
       <section>
@@ -90,6 +96,7 @@ const Board = () => {
           {showThreadCards}
         </ul>
       </section>
+      </div>}
     </main>
   );
 }

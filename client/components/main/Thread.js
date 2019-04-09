@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { get, post, report, remove } from '../../libs/apiHandler';
 import { reportThread } from '../../libs/commmonActionMethods';
@@ -9,6 +8,7 @@ import { addReplyPortal, deleteReplyPortal, deleteThreadPortal } from '../../lib
 
 import BoardContext from '../contexts/BoardContext';
 import ReplyCard from '../helper/ReplyCard';
+import Loading from '../helper/Loading';
 
 const Thread = ({ match }) => {
   const board = useContext(BoardContext);
@@ -28,7 +28,7 @@ const Thread = ({ match }) => {
     setThread(() => {
       return {...res};
     })
-    setLoadingStatus('false');
+    setLoadingStatus(false);
   };
 
   const _handleThreadDeleteResponse = res => {
@@ -187,7 +187,8 @@ const Thread = ({ match }) => {
         {addReplyPasswordPanelOpened && addReplyPortal('Enter Reply Password', handleReplyPost, resetReply, closeReplyDeletePasswordPanel)}
         {replyToDelete && deleteReplyPortal('Enter Reply Password', handleReplyDelete, closeReplyDeletePasswordPanel)}
         {threadDeletePasswordPanelOpened && deleteThreadPortal('Enter Thread Password', handleThreadDelete, cancelThreadDelete)}
-        <section className='secondary-color-bg white-text padding'>
+        {(loading && <Loading />) || 
+        <Fragment><section className='secondary-color-bg white-text padding'>
           <h5 className=''>{thread.reported ? 'reported': thread.text}</h5>
           <hr className='hr-custom' />
           <div>
@@ -197,7 +198,7 @@ const Thread = ({ match }) => {
               <button className='btn-flat btn-large col s1' onClick={() => toggleThreadDeletePasswordPanel(true)}><i className='material-icons danger-text'>delete</i></button>                    
             </div>
           </div>
-        </section>        
+        </section>
         <form className='col s12 m8 l6' onSubmit={addReply}>
           <div className='row valign-wrapper'>
             <div className='input-field col s10'>
@@ -213,7 +214,7 @@ const Thread = ({ match }) => {
           <ul className='collection'>
             {showReplyCards}        
           </ul>
-        </section>
+        </section></Fragment>}
       </main>
     </Fragment>
   );  
