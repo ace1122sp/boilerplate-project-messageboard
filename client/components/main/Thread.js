@@ -217,6 +217,6 @@ const Thread = ({ match }) => {
       </main>
     </Fragment>
   );  
-};
+}
   
 export default Thread;

@@ -38,6 +38,6 @@ const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
       </div>
     </li>              
   );
-};
+}
   
 export default ThreadCard;

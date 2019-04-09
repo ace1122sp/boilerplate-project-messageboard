@@ -47,6 +47,6 @@ const PasswordPanel = ({ message, handler, close }) => {
       </div>
     </div>
   );
-};
+}
   
 export default PasswordPanel;
