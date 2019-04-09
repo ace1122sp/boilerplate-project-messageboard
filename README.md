@@ -12,11 +12,9 @@
 
 - [React](https://reactjs.org/)
 - [React Router](https://reacttraining.com/react-router/)
-- [Socket.io](https://socket.io/docs/server-api/)
 
 ### Back-end:
 
 - [Node.js](https://nodejs.org/dist/latest-v10.x/docs/api/)
 - [Express](https://expressjs.com/en/4x/api.html)
 - [Mongoose](https://mongoosejs.com/)
-- [Socket.io](https://socket.io/docs/client-api/)
