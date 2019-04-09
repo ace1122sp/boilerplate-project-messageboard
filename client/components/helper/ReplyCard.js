@@ -10,11 +10,11 @@ const ReplyCard = ({ thread, reply, report, setReplyToDelete }) => {
     <Fragment>    
       <div className='card-content'>
         <p>{text}</p>
-        <p>created on: <time>{reply.created_on}</time></p>
       </div>
       <div className='card-action'>
-        <button className={classesString} onClick={() => setReplyToDelete(reply._id)}><i className='material-icons'>delete</i></button>
+        <p className='disabled-color-text'>created on: <time>{reply.created_on}</time></p>
         <button className={classesString} onClick={() => report(thread, reply._id)}><i className='material-icons'>report</i></button>
+        <button className={classesString} onClick={() => setReplyToDelete(reply._id)}><i className='material-icons danger-text'>delete</i></button>
       </div>
     </Fragment>
   );

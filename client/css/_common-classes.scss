@@ -10,8 +10,6 @@
 .main {
   display: flex;
   flex-direction: column;  
-  padding-top: $space-xl;
-  padding-bottom: $space-jumbo;
   justify-content: flex-start;
   min-height: 100vh;
 }
@@ -27,7 +25,67 @@
   padding: $space;
 }
 
+.main-padding {
+  padding-top: $space-xl;
+  padding-bottom: $space-jumbo;
+}
+
 .footer-wrap {
   display: flex;
   flex-direction: column;
+}
+
+.primary-color-text {
+  color: $primary-color;
+}
+
+.primary-color-l-text {
+  color: $primary-color-light;
+}
+
+.primary-color-d-text {
+  color: $primary-color-dark;
+}
+
+.secondary-color-text {
+  color: $secondary-color;
+}
+
+.secondary-color-bg {
+  background: $secondary-color;
+}
+
+.secondary-color-pale-text {
+  color: transparentize($secondary-color, .5);
+}
+
+.secondary-color-pale-bg {
+  background: transparentize($secondary-color, .5);
+}
+
+.disabled-color-text {
+  color: $button-disabled-color;
+}
+
+.danger-text {
+  color: $error-color;
+}
+
+.github-bg {
+  background: #24292e;
+}
+
+.linkedin-bg {
+  background: #0077B5
+}
+
+.social {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  li {
+    margin: $space-large;
+  }
 }
