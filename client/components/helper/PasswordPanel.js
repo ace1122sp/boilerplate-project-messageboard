@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 
 import Notification from './Notification';
+import Loading from './Loading';
 
 const PasswordPanel = ({ message, handler, close }) => {
   const [password, setPassword] = useState('');
   const [response, setResponse] = useState(null);
+  const [loading, setLoadingStatus] = useState(false);
 
   const handleChange = e => {
     setPassword(e.target.value);
@@ -12,9 +14,11 @@ const PasswordPanel = ({ message, handler, close }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    setLoadingStatus(true);
     handler(password)
       .then(res => {
         setResponse(res);
+        setLoadingStatus(false);
       })
       .catch(err => {
         console.error(err);
@@ -28,7 +32,7 @@ const PasswordPanel = ({ message, handler, close }) => {
           <button className='btn' onClick={close}>
             <i className='material-icons'>close</i>
           </button>
-          {(response && <Notification notification={response} />) || 
+          {(loading && <Loading />) || ((response && <Notification notification={response} />) || 
           <form onSubmit={handleSubmit}>
             <div className='row'>
               <div className='input-field col offset-s3 s6'>
@@ -43,7 +47,7 @@ const PasswordPanel = ({ message, handler, close }) => {
                 <i className='col s4 material-icons'>send</i>
               </button>
             </div>
-          </form>}
+          </form>)}
         </div>
       </div>
     </div>

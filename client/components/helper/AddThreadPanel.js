@@ -6,10 +6,11 @@ import { threadURL } from '../../libs/urlHandler';
 import BoardContext from '../contexts/BoardContext';
 
 import Notification from './Notification';
+import Loading from './Loading';
 
 const AddThreadPanel = ({ close, addToThreads }) => {
   const board = useContext(BoardContext);
-  const [sending, setRequestStatus] = useState(false);
+  const [loading, setLoadingStatus] = useState(false);
   const [notification, setNotification] = useState(null);
   const [thread, setThread] = useState('');
   const [delete_password, setPassword] = useState('');
@@ -21,12 +22,12 @@ const AddThreadPanel = ({ close, addToThreads }) => {
     } else {
       setNotification('Something went wrong!');
     }
-    setRequestStatus(false);
+    setLoadingStatus(false);
   };
 
   const addThread = e => {
     e.preventDefault();
-    setRequestStatus(true);
+    setLoadingStatus(true);
     post(threadURL(board), { text: thread, delete_password })
       .then(res => {
         _handlePostResponse(res);
@@ -49,7 +50,7 @@ const AddThreadPanel = ({ close, addToThreads }) => {
           <button className='btn' onClick={close}>
             <i className='material-icons'>close</i>
           </button>
-          {(notification && <Notification notification={notification} />) ||
+          {(loading && <Loading />) || ((notification && <Notification notification={notification} />) ||
           <form onSubmit={addThread}>
             <div className='row'>
               <div className='input-field col offset-s3 s6'>
@@ -70,7 +71,7 @@ const AddThreadPanel = ({ close, addToThreads }) => {
                 <i className='col s4 material-icons'>send</i>
               </button>
             </div>
-          </form>}
+          </form>)}
         </div>
       </div>
     </div>
