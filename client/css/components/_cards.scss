@@ -15,6 +15,7 @@
   background-color: $card-bg-color;
   transition: box-shadow .25s;
   border-radius: 2px;
+  word-wrap: break-word;
   @extend .z-depth-1;
 
 
@@ -93,7 +94,7 @@
       position: relative;
 
       .card-content {
-        flex-grow: 1;
+        flex-grow: 1;        
       }
     }
   }
