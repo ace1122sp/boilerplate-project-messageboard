@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 
 const ReplyCard = ({ thread, reply, report, setReplyToDelete }) => {
   const text = (reply.reported && reply.text !== '[deleted]') ? 'reported' : reply.text;
-  const classesString = 'btn-flat waves-effect waves-teal';  
+  let classesString = 'btn-flat waves-effect waves-teal';  
 
   if (reply.text === '[deleted]') classesString += ' disabled';
 

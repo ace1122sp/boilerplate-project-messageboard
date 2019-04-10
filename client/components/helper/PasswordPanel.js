@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
-import Notification from './Notification';
-import Loading from './Loading';
+import { showOnlyLoadingIf, showOnlyNotificationIf } from '../../libs/renderers';
 
 const PasswordPanel = ({ message, handler, close }) => {
   const [password, setPassword] = useState('');
@@ -32,7 +31,7 @@ const PasswordPanel = ({ message, handler, close }) => {
           <button className='btn' onClick={close}>
             <i className='material-icons'>close</i>
           </button>
-          {(loading && <Loading />) || ((response && <Notification notification={response} />) || 
+          {showOnlyLoadingIf(loading) || (showOnlyNotificationIf(response) || 
           <form onSubmit={handleSubmit}>
             <div className='row'>
               <div className='input-field col offset-s3 s6'>

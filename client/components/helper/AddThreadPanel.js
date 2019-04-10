@@ -2,11 +2,9 @@ import React, { useState, useContext } from 'react';
 
 import { post } from '../../libs/apiHandler';
 import { threadURL } from '../../libs/urlHandler';
+import { showOnlyLoadingIf, showOnlyNotificationIf } from '../../libs/renderers';
 
 import BoardContext from '../contexts/BoardContext';
-
-import Notification from './Notification';
-import Loading from './Loading';
 
 const AddThreadPanel = ({ close, addToThreads }) => {
   const board = useContext(BoardContext);
@@ -50,7 +48,7 @@ const AddThreadPanel = ({ close, addToThreads }) => {
           <button className='btn' onClick={close}>
             <i className='material-icons'>close</i>
           </button>
-          {(loading && <Loading />) || ((notification && <Notification notification={notification} />) ||
+          {showOnlyLoadingIf(loading) || (showOnlyNotificationIf(notification) ||
           <form onSubmit={addThread}>
             <div className='row'>
               <div className='input-field col offset-s3 s6'>
