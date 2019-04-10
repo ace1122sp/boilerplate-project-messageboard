@@ -6,7 +6,7 @@ const Header = () =>
     <div className='navbar-fixed'>
       <nav className='nav-wrapper'>
         <Link className='brand-logo left' to='/'>MessageBoard - fCC</Link>
-        <div className='input-field right padding'>
+        <div className='input-field right padding hide-on-med-and-down'>
           <select>
             <option>general</option>
           </select>

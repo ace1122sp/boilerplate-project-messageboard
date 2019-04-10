@@ -14,7 +14,7 @@ const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
     setThreadToDelete(thread._id);
   };
 
-  const replies = thread.replies.map(reply => <li className='collection-item' key={reply._id}>{thread.reported ? '*****' : reply.text}</li>);
+  const replies = thread.replies.map(reply => <li className='collection-item truncate' key={reply._id}>{thread.reported ? '*****' : reply.text}</li>);
   
   return (
     <li>
@@ -24,10 +24,10 @@ const ThreadCard = ({ thread, apiUrl, setThreadToDelete }) => {
       </div>
       <div className='collapsible-body'>
         <div className='row'>
-          <ul className='col s8 collection'>
+          <ul className='col s12 m8 collection'>
             {(replies.length && replies) || <li className='disabled-color-text'>no replies...</li>}
           </ul>      
-          <aside className='col s4'>
+          <aside className='col s12 m8'>
             <p className='disabled-color-text'>bumped on: {thread.bumped_on}</p>
           </aside>
         </div>

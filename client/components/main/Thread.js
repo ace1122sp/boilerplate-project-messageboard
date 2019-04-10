@@ -178,7 +178,7 @@ const Thread = ({ match }) => {
       });
   };
 
-  const showReplyCards = thread.replies.map(reply => <li className='collection-item card' key={reply._id}><ReplyCard thread={thread._id} reply={reply} report={reportReply} setReplyToDelete={setReplyToDelete} /></li>);
+  const showReplyCards = thread.replies.map(reply => <ReplyCard key={reply._id} thread={thread._id} reply={reply} report={reportReply} setReplyToDelete={setReplyToDelete} />);
 
   return (
     <Fragment>
@@ -211,9 +211,7 @@ const Thread = ({ match }) => {
           </div>
         </form>
         <section>
-          <ul className='collection'>
-            {showReplyCards}        
-          </ul>
+          {showReplyCards}                  
         </section></Fragment>}
       </main>
     </Fragment>
