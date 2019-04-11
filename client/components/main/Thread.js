@@ -45,7 +45,7 @@ const Thread = ({ match }) => {
       addToReplies(res);
       return 'reply created';
     } else {
-      return 'something went wrong';
+      return res;
     }
   };
 

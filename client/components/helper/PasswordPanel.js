@@ -8,31 +8,35 @@ import Portal_ from '../private/Portal_';
 
 const PasswordPanel = ({ message, handler, close }) => {
   const [password, setPassword] = useState('');
-  const [response, setResponse] = useState(null);
+  const [notification, setNotification] = useState(null);
   const [loading, setLoadingStatus] = useState(false);
 
   const handleChange = e => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = e => {
+  const _handleResponse = res => {
+    setNotification(res);
+    setLoadingStatus(false);    
+  }
+
+  const send = e => {
     e.preventDefault();
     setLoadingStatus(true);
     handler(password)
       .then(res => {
-        setResponse(res);
-        setLoadingStatus(false);
+        _handleResponse(res);
       })
       .catch(err => {
-        console.error(err);
+        _handleResponse('something went wrong')
       });
   };
 
   return (    
     <Portal_>
       <CloseBtn_ close={close} />
-      {showOnlyLoadingIf(loading) || (showOnlyNotificationIf(response) || 
-      <form onSubmit={handleSubmit}>            
+      {showOnlyLoadingIf(loading) || (showOnlyNotificationIf(notification) || 
+      <form onSubmit={send}>            
         <PasswordInput_ value={password} changeFunction={handleChange} label={message} />
         <SubmitBtn_ />
       </form>)}

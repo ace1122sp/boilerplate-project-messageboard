@@ -20,9 +20,9 @@ const AddThreadPanel = ({ close, addToThreads }) => {
   const _handlePostResponse = res => {
     if (res._id) {
       addToThreads(res);
-      setNotification('Thread added successfully!');
+      setNotification('thread added successfully!');
     } else {
-      setNotification('Something went wrong!');
+      setNotification(res);
     }
     setLoadingStatus(false);
   };
@@ -34,7 +34,9 @@ const AddThreadPanel = ({ close, addToThreads }) => {
       .then(res => {
         _handlePostResponse(res);
       })
-      .catch(err => {});
+      .catch(err => {
+        _handlePostResponse('something went wrong')
+      });
   };
 
   const handleThreadChange = e => {
