@@ -2,7 +2,7 @@ const Board = require('../models/Board');
 const Thread = require('../models/Thread');
 const uuid = require('uuid/v4');
 
-const getThreads = (req, res) => {
+const getThreads = (req, res, next) => {
   const board = req.params.board;
   const offset = req.query.offset || null;
 
@@ -11,11 +11,11 @@ const getThreads = (req, res) => {
       res.json(rec);
     })
     .catch(err => {
-      console.error(err); // temp solution for development
+      next(err);
     });
 };
 
-const addThread = (req, res) => {
+const addThread = (req, res, next) => {
   const board = req.params.board;
   const threadParams = {
     _id: uuid(),
@@ -44,11 +44,11 @@ const addThread = (req, res) => {
       res.status(200).json(rec);
     })
     .catch(err => {
-      console.error(err); // temp solution for development
+      next(err);
     });
 };
 
-const reportThread = (req, res) => {
+const reportThread = (req, res, next) => {
   const _id = req.body.thread_id;
 
   Thread.report(_id)
@@ -56,11 +56,11 @@ const reportThread = (req, res) => {
       res.send('success');
     })
     .catch(err => {
-      console.error(err); // temp solution for development
+      next(err);
     });
 };
 
-const deleteThread = (req, res) => {
+const deleteThread = (req, res, next) => {
   const board = req.params.board;
   const thread_id = req.body.thread_id;
   const delete_password = req.body.delete_password;
@@ -78,7 +78,7 @@ const deleteThread = (req, res) => {
       }
     })
     .catch(err => {
-      console.error(err); // temp solution for development
+      next(err);
     });
 };
 

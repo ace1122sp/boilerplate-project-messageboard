@@ -12,7 +12,7 @@ const { getThreads, addThread, reportThread, deleteThread } = require('../contro
 const { getThread, addReply, reportReply, deleteReply } = require('../controllers/reply');
 const { checkThreads, checkReplies, handleValidationErrors } = require('../controllers/sanitization-and-validation');
 
-module.exports = function (app) {  
+module.exports = app =>  {  
   app.route('/api/threads/:board')
     .get(checkThreads.get, handleValidationErrors, getThreads)
     .post(checkThreads.post, handleValidationErrors, addThread)

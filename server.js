@@ -1,5 +1,6 @@
 'use strict';
-if (process.env.NODE_ENV === 'development') require('dotenv').config();
+// if (process.env.NODE_ENV === 'development') require('dotenv').config();
+require('dotenv').config();
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -12,7 +13,8 @@ const fccTestingRoutes = require('./routes/fcctesting.js');
 const runner = require('./test-runner');
 const dbConnect = require('./libs/db');
 const { sendIndexHTML, notFound, redirectToCompressedStaticJS } = require('./controllers/general');
- 
+const errorHandler = require('./libs/errorHandler')(config.app.env);
+
 const PORT = config.app.port || 3000;
 
 const app = express();
@@ -50,7 +52,10 @@ app.route('/*')
 //For FCC testing purposes
 fccTestingRoutes(app);
 
-// add error handling
+// error handling
+app.use(errorHandler.logErrors);
+app.use(errorHandler.clientErrors);
+app.use(errorHandler.serverErrors);
     
 //404 Not Found Middleware
 app.use(notFound);

@@ -2,7 +2,7 @@ const uuid = require('uuid/v4');
 const Thread = require('../models/Thread');
 const Reply = require('../models/Reply');
 
-const getThread = (req, res) => {
+const getThread = (req, res, next) => {
   const thread_id = req.query.thread_id;
 
   Thread.get(thread_id)
@@ -10,11 +10,11 @@ const getThread = (req, res) => {
       res.json(rec);
     })
     .catch(err => {
-      console.error(err); // temp solution for development
+      next(err);
     });
 };
 
-const addReply = (req, res) => {
+const addReply = (req, res, next) => {
   const board = req.params.board;
   const thread_id = req.body.thread_id;
   const replyParams = {
@@ -42,11 +42,11 @@ const addReply = (req, res) => {
       res.status(200).json(rec);
     })
     .catch(err => {
-      console.error(err); // temp solution for development
+      next(err);
     });
 };
 
-const reportReply = (req, res) => {
+const reportReply = (req, res, next) => {
   const thread_id = req.body.thread_id; // atm i dont need this
   const reply_id = req.body.reply_id;
 
@@ -55,11 +55,11 @@ const reportReply = (req, res) => {
       res.send('success')
     })
     .catch(err => {
-      console.error(err); // temp solution for development
+      next(err);
     });
 };
 
-const deleteReply = (req, res) => {
+const deleteReply = (req, res, next) => {
   const board = req.params.board;
   const thread_id = req.params.thread_id;
   const reply_id = req.body.reply_id;
@@ -74,7 +74,7 @@ const deleteReply = (req, res) => {
       }
     })
     .catch(err => {
-      console.error(err); // temp solution for development
+      next(err);
     });
 };
 
