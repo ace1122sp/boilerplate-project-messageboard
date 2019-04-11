@@ -32,15 +32,15 @@ const PasswordPanel = ({ message, handler, close }) => {
             <i className='material-icons'>close</i>
           </button>
           {showOnlyLoadingIf(loading) || (showOnlyNotificationIf(response) || 
-          <form className='margin-up-and-down' onSubmit={handleSubmit}>
-            <div className='row'>
+          <form onSubmit={handleSubmit}>
+            <div className='row custom-margin-top-bottom'>
               <div className='input-field col s12 offset-m3 m6'>
                 <input type='password' id='password-input' value={password} onChange={handleChange} required />
                 <label htmlFor='password-input'>{message}</label>
                 <span className='helper-text'>password must be at least 5 characters long</span>
               </div>
             </div>
-            <div className='row'>
+            <div className='row custom-margin-top-bottom'>
               <button className='col btn right'>
                 <span className='col s8 center'>submit</span>
                 <i className='col s4 material-icons'>send</i>
