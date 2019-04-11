@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 import { showOnlyLoadingIf, showOnlyNotificationIf } from '../../libs/renderers';
-import SubmitBtn_ from './SubmitBtn_';
-import PasswordInput_ from './PasswordInput_';
-import CloseBtn_ from './CloseBtn_';
-import Portal_ from './Portal_';
+import SubmitBtn_ from '../private/SubmitBtn_';
+import PasswordInput_ from '../private/PasswordInput_';
+import CloseBtn_ from '../private/CloseBtn_';
+import Portal_ from '../private/Portal_';
 
 const PasswordPanel = ({ message, handler, close }) => {
   const [password, setPassword] = useState('');
