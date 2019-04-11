@@ -201,11 +201,11 @@ const Thread = ({ match }) => {
         </section>
         <form className='col s12 m8 l6' onSubmit={addReply}>
           <div className='row valign-wrapper'>
-            <div className='input-field col s10'>
+            <div className='input-field col s8 m10'>
               <input type='text' id='reply-input' value={newReply} onChange={handleReplyChange} required />
               <label htmlFor='reply-input'>reply</label>        
             </div>
-            <div className='col s2'>
+            <div className='col s4 m2'>
               <button className='btn-flat btn-large'><i className='material-icons secondary-color-text'>reply</i></button>
             </div>
           </div>

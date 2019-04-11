@@ -11,8 +11,8 @@
 .main {
   display: flex;
   flex-direction: column;  
-  justify-content: flex-start;
-  min-height: 100vh;
+  justify-content: flex-start;  
+  min-height: 100vh;  
 }
 
 .center-row {
@@ -22,8 +22,13 @@
   margin: auto;
 }
 
+.margin-up-and-down {
+  margin-top: $space-large;
+  margin-bottom: $space-large;
+}
+
 .padding {
-  padding: $space;
+  padding: $space-large;
 }
 
 .main-padding {

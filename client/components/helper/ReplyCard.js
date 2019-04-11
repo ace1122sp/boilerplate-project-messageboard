@@ -8,7 +8,7 @@ const ReplyCard = ({ thread, reply, report, setReplyToDelete }) => {
 
   return (
     <div className='row'>    
-      <div className='col s12 m10 xl6'>    
+      <div className='col s12 m10 xl8'>    
         <div className='card'>
           <div className='card-content'>
             <p>{text}</p>
