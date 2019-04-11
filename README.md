@@ -2,9 +2,31 @@
 ---
 ## Getting Started
 
-### Server / API
+1. Clone the repository.
+``` 
+git clone https://github.com/ace1122sp/boilerplate-project-messageboard.git
+cd boilerplate-project-messageboard
+```
 
-### Front-end
+2. Install all front-end & back-end dependencies
+```
+npm install 
+```
+
+3. Create a bundle
+```
+npm run client-build
+```
+
+4. Start the server
+```
+npm start
+```
+
+5. If you want, you can run the tests
+```
+npm run test
+```
 
 ## Tech Stack
 
