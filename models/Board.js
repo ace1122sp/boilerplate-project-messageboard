@@ -56,7 +56,7 @@ BoardSchema.static('getTen', function(board, offset = null) {
     .populate({ 
       path: 'threads', 
       select: '_id text created_on bumped_on reported replies', 
-      options: { sort: { bumped_on: -1 }, limit: 10, skip: offset },
+      options: { sort: { bumped_on: 1 }, limit: 10, skip: offset },
       populate: { path: 'replies', select: '_id text created_on reported', options: { limit: 3 } } 
     });
 });
