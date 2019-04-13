@@ -28,8 +28,8 @@ const Board = () => {
     const instances = M.Collapsible.init(elems, options);
   });
 
-  const _handleGetResponse = res => {
-    setThreads([...res.threads]);
+  const _handleInitGetResponse = res => {    
+    setThreads([...sortThreads(res.threads)]);
     setLoadingStatus(false);
   };
 
@@ -40,7 +40,7 @@ const Board = () => {
   const setInitThreads = url => {
     get(url)
       .then(res => {
-        _handleGetResponse(res);
+        _handleInitGetResponse(res);
       })
       .catch(err => {
         console.log(err) // temp solution
@@ -58,6 +58,29 @@ const Board = () => {
   const addToThreads = thread => {
     setThreads(() => [...threads, thread]);
   };
+
+  const mergeThreads = (oldThreads, newThreads) => {
+    let merged = [...oldThreads, ...newThreads];
+    const s = new Set(merged);
+    merged = [];
+
+    s.forEach(thread => {
+      merged.push(thread);
+    });
+
+    return merged;
+  };
+
+  const sortThreads = threads => {
+    const sorted = threads.sort((a, b) => {
+      const dateA = new Date(a.bumped_on);
+      const dateB = new Date(b.bumped_on);
+
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    return sorted;
+  }
 
   const removeFromThreads = thread => {
     setThreads(() => threads.filter(t => t._id !== thread));
@@ -79,6 +102,20 @@ const Board = () => {
       });
   };
 
+  const getMoreThreads = () => {
+    const offset = threads.length;
+
+    get(`${threadURL(board)}?offset=${offset}`)
+      .then(res => {
+        const merged = mergeThreads(threads, res.threads);
+        const sorted = sortThreads(merged);
+        setThreads(sorted);
+      })
+      .catch(err => {
+        console.log(err); // temp solution
+      });
+  }
+
   const showThreadCards = threads.map(thread => <ThreadCard key={thread._id} thread={thread} apiUrl={threadURL(board)} setThreadToDelete={setThreadToDelete} />);
 
   return (
@@ -88,14 +125,17 @@ const Board = () => {
       {(loading && <Loading />) || 
       <div>
         <div className='fixed-action-btn'>
-        <button className='btn-floating btn-large pulse waves-effect waves-circle waves-white' onClick={openAddThreadPanel}><i className='material-icons'>add</i></button>
-      </div>
+          <button className='btn-floating btn-large pulse waves-effect waves-circle waves-white' onClick={openAddThreadPanel}><i className='material-icons'>add</i></button>
+        </div>
       <section>
         {!threads.length && <EmptyBoard />}
         <ul className='collapsible'>
           {showThreadCards}
         </ul>
-      </section>
+        <div className='row center-align'>
+          <button className='btn btn-raised' onClick={getMoreThreads}>load more threads</button>
+        </div>
+      </section>      
       </div>}
     </main>
   );
