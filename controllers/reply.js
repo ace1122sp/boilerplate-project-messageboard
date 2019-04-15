@@ -1,4 +1,6 @@
 const uuid = require('uuid/v4');
+const validator = require('validator');
+
 const Thread = require('../models/Thread');
 const Reply = require('../models/Reply');
 
@@ -7,7 +9,17 @@ const getThread = (req, res, next) => {
 
   Thread.get(thread_id)
     .then(rec => {
-      res.json(rec);
+      const unescapedThread = rec;
+      
+      unescapedThread.text = validator.unescape(unescapedThread.text);
+      unescapedThread.replies = unescapedThread.replies.map(reply => {
+        if (reply) {
+          reply.text = validator.unescape(reply.text);
+        }
+        return reply;
+      });
+      
+      res.json(unescapedThread);
     })
     .catch(err => {
       next(err);

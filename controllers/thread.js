@@ -1,14 +1,21 @@
+const uuid = require('uuid/v4');
+const validator = require('validator');
+
 const Board = require('../models/Board');
 const Thread = require('../models/Thread');
-const uuid = require('uuid/v4');
 
 const getThreads = (req, res, next) => {
   const board = req.params.board;
   const offset = req.query.offset || null;
 
   Board.getTen(board, offset)
-    .then(rec => {
-      res.json(rec);
+    .then(rec => {     
+      const unescapedThreads = rec.threads.map(thread => {
+        thread.text = validator.unescape(thread.text);
+        return thread;
+      })
+
+      res.json(unescapedThreads);
     })
     .catch(err => {
       next(err);
