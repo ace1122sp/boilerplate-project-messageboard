@@ -109,7 +109,7 @@ const Board = () => {
 
     get(`${threadURL(board)}?offset=${offset}`)
       .then(res => {
-        const merged = mergeThreads(threads, res.threads);
+        const merged = mergeThreads(threads, res);
         const sorted = sortThreads(merged);
         setThreads(sorted);
       })
