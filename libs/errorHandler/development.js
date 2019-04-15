@@ -24,7 +24,7 @@ module.exports = (() => {
 
   const serverErrors = (err, req, res, next) => {
     res.sendStatus(500);
-  };
+  }
 
   return {
     testExit,

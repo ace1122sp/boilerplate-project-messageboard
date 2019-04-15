@@ -30,7 +30,7 @@ const Board = () => {
   });  
 
   const _handleInitGetResponse = res => {    
-    setThreads([...sortThreads(res.threads)]);
+    setThreads([...sortThreads(res)]);
     setLoadingStatus(false);
   };
 
