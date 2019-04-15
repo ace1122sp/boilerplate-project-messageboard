@@ -91,6 +91,7 @@ const Thread = ({ match }) => {
       })
       .catch(err => {
         generalErrorHandler();
+        setLoadingStatus(false);
       });
   };
 
@@ -127,7 +128,7 @@ const Thread = ({ match }) => {
     };
     return post(replyURL(board), data)
       .then(res => {
-        return _handlePostReplyResponse(res);        
+        return _handlePostReplyResponse(res);
       })
       .catch(error => {
         generalErrorHandler();

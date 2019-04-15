@@ -45,6 +45,7 @@ const Board = () => {
       })
       .catch(err => {
         generalErrorHandler();
+        setLoadingStatus(false);
       });
   };
 
