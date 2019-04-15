@@ -5,6 +5,7 @@ import { get, post, report, remove } from '../../libs/apiHandler';
 import { reportThread } from '../../libs/commmonActionMethods';
 import { threadURL, replyURL } from '../../libs/urlHandler';
 import { addReplyPortal, deleteReplyPortal, deleteThreadPortal } from '../../libs/portalGenerators';
+import { generalErrorHandler } from '../../libs/errorHandlers';
 
 import BoardContext from '../contexts/BoardContext';
 import ReplyCard from '../helper/ReplyCard';
@@ -89,7 +90,7 @@ const Thread = ({ match }) => {
         _handleGetResponse(res);
       })
       .catch(err => {
-        console.error(err); // temp solution
+        generalErrorHandler();
       });
   };
 
@@ -104,7 +105,7 @@ const Thread = ({ match }) => {
     return remove(threadURL(board), data)
       .then(res => _handleThreadDeleteResponse(res))
       .catch(err => {
-        console.error(err); // temp solution for development
+        generalErrorHandler();
       });
   };
 
@@ -129,7 +130,7 @@ const Thread = ({ match }) => {
         return _handlePostReplyResponse(res);        
       })
       .catch(error => {
-        console.error(err); // temp solution for development
+        generalErrorHandler();
       });
   };
 
@@ -159,7 +160,7 @@ const Thread = ({ match }) => {
     return remove(replyURL(board), data)
       .then(res => _handleReplyDeleteResponse(res, data))
       .catch(err => {
-        console.error(err); // temp solution for development
+        generalErrorHandler();
       });
   }
 
@@ -174,7 +175,7 @@ const Thread = ({ match }) => {
         _handlePutReplyResponse(res, reply_id);
       })
       .catch(err => {
-        console.error(err); // temp solution for development
+        generalErrorHandler();
       });
   };
 

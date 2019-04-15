@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { get, remove } from '../../libs/apiHandler';
 import { threadURL } from '../../libs/urlHandler';
 import { addThreadPortal, deleteThreadPortal } from '../../libs/portalGenerators';
+import { generalErrorHandler } from '../../libs/errorHandlers';
 
 import BoardContext from '../contexts/BoardContext';
 import ThreadCard from '../helper/ThreadCard';
@@ -26,7 +27,7 @@ const Board = () => {
     const options = {};
     const elems = document.querySelectorAll('.collapsible');
     const instances = M.Collapsible.init(elems, options);
-  });
+  });  
 
   const _handleInitGetResponse = res => {    
     setThreads([...sortThreads(res.threads)]);
@@ -40,10 +41,10 @@ const Board = () => {
   const setInitThreads = url => {
     get(url)
       .then(res => {
-        _handleInitGetResponse(res);
+        _handleInitGetResponse(res);        
       })
       .catch(err => {
-        console.log(err) // temp solution
+        generalErrorHandler();
       });
   };
 
@@ -98,7 +99,7 @@ const Board = () => {
         return res;
       })
       .catch(err => {
-        console.error(err); // temp solution for development
+        generalErrorHandler;
       });
   };
 
@@ -112,7 +113,7 @@ const Board = () => {
         setThreads(sorted);
       })
       .catch(err => {
-        console.log(err); // temp solution
+        generalErrorHandler();
       });
   }
 
