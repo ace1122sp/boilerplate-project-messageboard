@@ -37,7 +37,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // add gzip config
-app.get('*', redirectToCompressedStaticJS);
+app.get('*.js', redirectToCompressedStaticJS);
 
 // serve static files
 app.use('/public', express.static(process.cwd() + '/public'));
