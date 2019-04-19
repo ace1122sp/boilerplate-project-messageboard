@@ -34,6 +34,7 @@ npm run test
 
 - [React](https://reactjs.org/)
 - [React Router](https://reacttraining.com/react-router/)
+- [Materialize CSS](https://materializecss.com)
 
 ### Back-end:
 
