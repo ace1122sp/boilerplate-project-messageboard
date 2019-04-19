@@ -12,8 +12,16 @@ const getThreads = (req, res, next) => {
     .then(rec => {     
       const unescapedThreads = rec.threads.map(thread => {
         thread.text = validator.unescape(thread.text);
+        thread.replies.forEach(reply => {
+          if (reply) {
+            if (reply.reported) reply.text = 'reported';
+            reply.text = validator.unescape(reply.text);
+          }
+
+          return reply;
+        });
         return thread;
-      })
+      });      
 
       res.json(unescapedThreads);
     })
